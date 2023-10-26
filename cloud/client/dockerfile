@@ -3,7 +3,11 @@
 FROM node:20-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install
+# RUN npm ci --omit=dev
 COPY . .
 CMD ["npm", "start"]
 EXPOSE 3000
+
+# Build image with
+# docker build -t client .
