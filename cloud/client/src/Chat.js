@@ -1,4 +1,3 @@
-// Chat.js
 import React, { useEffect, useState } from "react";
 
 function Chat({ socket, username, room }) {
@@ -21,7 +20,7 @@ function Chat({ socket, username, room }) {
       setMessageList((list) => [...list, messageData]);
       setCurrentMessage("");
     }
-  }
+  };
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
@@ -32,27 +31,27 @@ function Chat({ socket, username, room }) {
   return (
     <div className="chat-window">
       <div className="chat-header">
-        <p>Chat Room {room}</p> {/* Display the room ID in the chat header */}
+        <p>Chat Room {room}</p> {/* Update the text here */}
       </div>
       <div className="chat-body">
-        {messageList.map((messageContent) => {
-          return (
-            <div
-              className="message"
-              id={username === messageContent.author ? "you" : "other"}
-            >
-              <div>
-                <div className="message-content">
-                  <p>{messageContent.message}</p>
-                </div>
-                <div className="message-meta">
-                  <p id="time">{messageContent.time}</p>
-                  <p id="author">{messageContent.author}</p>
+          {messageList.map((messageContent) => {
+            return (
+              <div
+                className="message"
+                id={username === messageContent.author ? "you" : "other"}
+              >
+                <div>
+                  <div className="message-content">
+                    <p>{messageContent.message}</p>
+                  </div>
+                  <div className="message-meta">
+                    <p id="time">{messageContent.time}</p>
+                    <p id="author">{messageContent.author}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
       <div className="chat-footer">
         <input
