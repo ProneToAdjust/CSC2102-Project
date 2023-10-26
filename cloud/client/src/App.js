@@ -1,40 +1,49 @@
+// App.js
 import "./App.css";
 import io from "socket.io-client";
 import { useState } from "react";
 import Chat from "./Chat";
-import { getCookie, setCookie } from "./cookieUtils"; // Import your cookie utility functions.
+import { getCookie, setCookie } from "./cookieUtils";
 
 const socket = io.connect("http://localhost:3001");
 
+function generateRandomRoomID() {
+  // Generate a random room ID, for example, a combination of letters and numbers.
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const roomID = Array.from({ length: 6 }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+  return roomID;
+}
+
 function App() {
   const [username, setUsername] = useState("");
-  const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
-  const [yourLanguage, setYourLanguage] = useState(getCookie("userLanguage") || ""); // Initialize with the value from the cookie, if available.
-  const [learnLanguage, setLearnLanguage] = useState(getCookie("newLang") || ""); // Initialize with the value from the cookie, if available.
+  const [yourLanguage, setYourLanguage] = useState(getCookie("userLanguage") || "");
+  const [learnLanguage, setLearnLanguage] = useState(getCookie("newLang") || "");
+  const [room, setRoom] = useState(""); // Define the 'room' variable
 
   const languageOptions = [
     { value: "en", label: "English" },
     { value: "es", label: "Español" },
     { value: "kr", label: "Korean" },
     { value: "jp", label: "Japanese" },
-    // Add more language options as needed
   ];
 
   const joinRoom = () => {
-    if (username !== "" && room !== "") {
+    if (username !== "") {
+      const newRoom = generateRandomRoomID(); // Generate a random room ID.
+      setRoom(newRoom); // Set the 'room' variable
       // Store the language preferences in cookies when joining the room.
       if (yourLanguage !== "") {
-        setCookie("userLanguage", yourLanguage, 365); // You can adjust the expiration time as needed.
+        setCookie("userLanguage", yourLanguage, 365);
       }
       if (learnLanguage !== "") {
-        setCookie("newLang", learnLanguage, 365); // You can adjust the expiration time as needed.
+        setCookie("newLang", learnLanguage, 365);
       }
 
-      socket.emit("join_room", room);
+      socket.emit("join_room", newRoom); // Use the generated room ID.
       setShowChat(true);
     }
-  };
+  }
 
   return (
     <div className="App">
@@ -46,13 +55,6 @@ function App() {
             placeholder="John..."
             onChange={(event) => {
               setUsername(event.target.value);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Room ID..."
-            onChange={(event) => {
-              setRoom(event.target.value);
             }}
           />
           <div>
@@ -89,6 +91,7 @@ function App() {
         </div>
       ) : (
         <Chat socket={socket} username={username} room={room} />
+
       )}
     </div>
   );
