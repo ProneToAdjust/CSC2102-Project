@@ -13,7 +13,7 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-
+const dictionary = {};
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
@@ -29,6 +29,18 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);
   });
+  socket.on("addKeyValuePair", (data) => {
+    const username = data.username;
+    const language = data.language;
+    const combinedName = username + language;
+    
+    // Handle the dictionary update, add the new key-value pair
+    dictionary[username] = combinedName;
+
+    // Emit the updated dictionary to all connected clients
+    io.emit("updateDictionary", dictionary);
+  });
+
 });
 
 server.listen(3001, () => {
