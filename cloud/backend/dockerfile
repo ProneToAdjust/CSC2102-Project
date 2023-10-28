@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+ADD test.py .
+ADD containerManager.py .
+RUN pip install docker
+CMD ["python", "./test.py"] 
+
+# TO BUILD DOCKER IMAGE
+# docker build -t test .
+
+# RUN DOCKER IMAGE WITH THE FOLLOWING AS VOLUME
+# /var/run/docker.sock /var/run/docker.sock 

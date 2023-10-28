@@ -1,6 +1,7 @@
-import container_manager
+import containerManager
 
-cm = container_manager
+cm = containerManager
 print(cm.listContainers())
 print(cm.isPortUsed(49152))
 cm.createContainer("user1ID")
+print(cm.listContainers())
