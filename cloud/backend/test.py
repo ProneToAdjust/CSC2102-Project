@@ -1,7 +1,6 @@
-import containerManager
+from containerManager import *
 
-cm = containerManager
-print(cm.listContainers())
-print(cm.isPortUsed(49152))
-cm.createContainer("user1ID")
-print(cm.listContainers())
+print(listContainers())
+# print(_isPortUsed(49152))
+createContainer()
+print(listContainers())
