@@ -14,7 +14,7 @@ function WaitRoom({ socket, username, room, dictionary, yourLanguage, learnLangu
   });
 
   const checkCount = () => {
-    if (roomCount === 20) {
+    if ((roomCount%2)===0) {
       socket.emit("join_room", room);
       setShowChat(true);
     }
