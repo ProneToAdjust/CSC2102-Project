@@ -1,7 +1,6 @@
 import "./App.css";
 import io from "socket.io-client";
 import { useState, useEffect } from "react";
-import Chat from "./Chat";
 import { getCookie, setCookie } from "./cookieUtils"; // Import your cookie utility functions.
 import WaitRoom from "./WaitRoom";
 
@@ -10,7 +9,6 @@ const socket = io.connect("http://localhost:3001");
 function App() {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
-  const [showChat, setShowChat] = useState(false);
   const [yourLanguage, setYourLanguage] = useState(getCookie("userLanguage") || ""); // Initialize with the value from the cookie, if available.
   const [learnLanguage, setLearnLanguage] = useState(getCookie("newLang") || ""); // Initialize with the value from the cookie, if available.
   const [dictionary, setDictionary] = useState({});
@@ -40,7 +38,6 @@ function App() {
       console.log(socket.id);
       socket.emit("join_room", room);
       socket.emit("addKeyValuePair", { username: socket.id, language: combinedName });
-      setShowChat(false);
       setWaitRoom(true);
     }
   };
@@ -69,12 +66,10 @@ function App() {
 
   return (
     <div className="App">
-      {showChat ? (
-        <Chat socket={socket} username={username} room={room} dictionary={dictionary} />
-      ) : (
+      { (
         waitRoom ? (
-          <WaitRoom />
-        ) : (
+          <WaitRoom socket={socket} username={username} room={room} dictionary={dictionary} yourLanguage={yourLanguage} learnLanguage={learnLanguage} />
+          ) : (
           <div className="joinChatContainer">
             <h3>Join A Chat</h3>
             <input

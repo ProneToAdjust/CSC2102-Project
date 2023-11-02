@@ -1,14 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Chat from "./Chat";
 
-function WaitRoom() {
+function WaitRoom({ socket, username, room, dictionary, yourLanguage, learnLanguage }) {
+  const [showChat, setShowChat] = useState(false);
+  var roomCount = Object.keys(dictionary).length;
+  console.log(roomCount);
+  console.log(yourLanguage);
+  console.log(learnLanguage);
+
+
+  useEffect(() => {
+    checkCount();
+  });
+
+  const checkCount = () => {
+    if (roomCount === 20) {
+      socket.emit("join_room", room);
+      setShowChat(true);
+    }
+  };
+
+
   return (
-    <div className="wait-room">
-      <div className="wait-message">
-        <p>Waiting for another user to join...</p>
-      </div>
-      {/* You can add additional waiting indicators here, such as a loading spinner */}
+    <div className="App">
+      {showChat ? (
+        <Chat socket={socket} username={username} room={room} dictionary={dictionary} />
+      ) : (
+         (
+            <div className="wait-message">
+            <p>Waiting for another user to join...</p>
+          </div>
+        )
+      )}
     </div>
   );
+
 }
 
 export default WaitRoom;
