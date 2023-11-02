@@ -13,6 +13,8 @@ function App() {
   const [learnLanguage, setLearnLanguage] = useState(getCookie("newLang") || ""); // Initialize with the value from the cookie, if available.
   const [dictionary, setDictionary] = useState({});
   const [waitRoom, setWaitRoom] = useState(false);
+  const [generatedFirstName, setGeneratedFirstName] = useState('');
+  const [generatedLastName, setGeneratedLastName] = useState('');
 
   const languageOptions = [
     { value: "en", label: "English" },
@@ -21,8 +23,31 @@ function App() {
     { value: "jp", label: "Japanese" },
     // Add more language options as needed
   ];
+  // Lists of colors and animals 
+  const firstNames = [
+    'Stupid', 'Smart', 'Dumb', 'Crazy', 'Insane',
+    'Silly', 'Funny', 'Weird', 'Strange', 'Normal',
+    'Desperate', 'Gay', 'Racist', 'Sad', 'Angry'
+  ];
+  const lastNames = [
+    'YaoTeck', 'Ryan', 'Keagan', 'Mirza', 'JW',
+    'KuangYi', 'Phileo', 'Rayray', 'Gabby', 'Fred',
+    'Please', 'Send', 'HELP', 'Duck', 'Horse'
+  ];
+  //  Generate random name. 
+  useEffect(() => {
+    const randomFirstName =
+      firstNames[Math.floor(Math.random() * firstNames.length)];
+    const randomLastName =
+      lastNames[Math.floor(Math.random() * lastNames.length)];
+    setGeneratedFirstName(randomFirstName);
+    setGeneratedLastName(randomLastName);
+    setUsername(randomFirstName + randomLastName);
+  }, []);
+  
 
   const joinRoom = () => {
+
     if (username !== "" && room !== "") {
       // Store the language preferences in cookies when joining the room.
       if (yourLanguage !== "") {
@@ -31,13 +56,14 @@ function App() {
       if (learnLanguage !== "") {
         setCookie("newLang", learnLanguage, 365); // You can adjust the expiration time as needed.
       }
-      const combinedName = yourLanguage + learnLanguage;
-      addKeyValuePair(socket.id, combinedName);
+
+      const combinedLang = yourLanguage + learnLanguage;
+      addKeyValuePair(socket.id, combinedLang);
       console.log(username);
-      console.log(combinedName);
+      console.log(combinedLang);
       console.log(socket.id);
       socket.emit("join_room", room);
-      socket.emit("addKeyValuePair", { username: socket.id, language: combinedName });
+      socket.emit("addKeyValuePair", { username: socket.id, language: combinedLang });
       setWaitRoom(true);
     }
   };
@@ -66,19 +92,12 @@ function App() {
 
   return (
     <div className="App">
-      { (
+      {(
         waitRoom ? (
           <WaitRoom socket={socket} username={username} room={room} dictionary={dictionary} yourLanguage={yourLanguage} learnLanguage={learnLanguage} />
-          ) : (
+        ) : (
           <div className="joinChatContainer">
             <h3>Join A Chat</h3>
-            <input
-              type="text"
-              placeholder="John..."
-              onChange={(event) => {
-                setUsername(event.target.value);
-              }}
-            />
             <input
               type="text"
               placeholder="Room ID..."
@@ -90,6 +109,7 @@ function App() {
               <select
                 value={yourLanguage}
                 onChange={(event) => {
+                  setUsername(generatedFirstName + generatedLastName)
                   setYourLanguage(event.target.value);
                 }}
               >

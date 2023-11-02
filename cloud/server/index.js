@@ -33,10 +33,10 @@ io.on("connection", (socket) => {
   socket.on("addKeyValuePair", (data) => {
     const username = data.username;
     const language = data.language;
-    const combinedName = username + language;
+    const combinedLang = username + language;
     
     // Handle the dictionary update, add the new key-value pair
-    dictionary[username] = combinedName;
+    dictionary[username] = combinedLang;
 
     // Emit the updated dictionary to all connected clients
     io.emit("updateDictionary", dictionary);
