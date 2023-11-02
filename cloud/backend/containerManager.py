@@ -1,22 +1,6 @@
-# TODO: Create a class for container_management 
-# TODO: Create a class for container (user1ID, user2ID, containerID, containerIP/containerPort)
-# TODO: Create a dictionary of containers
-# TODO: Create a function to create and start a container, return the container IP or port (Need to decide which one)
-# TODO: Create a function to get a container's IP or port (49152 to 65535)
-# TODO: Create a function to delete a container
-# TODO: Create a function to get the status of a container
-
 import docker
-
-containers = {} # Dictionary of containers {containerID: Container}
-client = docker.from_env()
-# Delete containers that are the server image
-for container in client.containers.list(all=True):
-    if container.image.tags[0] == "server:latest" or container.image.tags[0] == "server":
-        if container.status == "running":
-            container.stop()
-        container.remove()
-print("Deleted all pre-existing containers")
+import threading
+import time
 
 class Container:
     def __init__(self, port: int):
@@ -40,11 +24,12 @@ def createContainer() -> str:
 # Param: containerID - the ID of the container to delete
 # Return: None
 def deleteContainer(containerID: str) -> None:
-    # Delete the container
-    client.containers.get(containerID).stop()
+    if client.containers.get(containerID).status == "running":
+        client.containers.get(containerID).stop()
     client.containers.get(containerID).remove()
     # Remove the container from the dictionary
-    del containers[containerID]
+    if containerID in containers:
+        del containers[containerID]
 
 # Sets the user ID of a container (Applicable for both users)
 # Param: containerID - the ID of the container to set the user ID of
@@ -78,6 +63,15 @@ def getContainerPort(containerID: str) -> int:
     else:
         return None
 
+# Checks if a container is running
+# Param: containerID - the ID of the container to check
+# Return: True if the container is running, False if the container is not
+def isContainerRunning(containerID: str) -> bool:
+    if client.containers.get(containerID).status == "running":
+        return True
+    else:
+        return False
+
 def _getAvailablePort() -> int:
     for port in range(49152, 65535):
         if not _isPortUsed(port):
@@ -88,3 +82,19 @@ def _isPortUsed(port: int) -> bool:
     import socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('localhost', port)) == 0
+
+class ContainerCleanupThread(threading.Thread):
+    def run(self,*args,**kwargs):
+        while True:
+            # Delete containers that are the server image
+            for container in client.containers.list(all=True):
+                if container.image.tags[0] == "server:latest" or container.image.tags[0] == "server":
+                    if not isContainerRunning(container.id):
+                        deleteContainer(container.id)
+                        print("Deleted container: " + container.id)
+            time.sleep(60)
+
+containers = {} # Dictionary of containers {containerID: Container}
+client = docker.from_env()
+containerCleanupThread = ContainerCleanupThread()
+containerCleanupThread.start()

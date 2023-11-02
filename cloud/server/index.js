@@ -3,6 +3,7 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
+const { setTimeout } = require("timers/promises");
 app.use(cors());
 
 
@@ -41,9 +42,25 @@ io.on("connection", (socket) => {
     // Emit the updated dictionary to all connected clients
     io.emit("updateDictionary", dictionary);
   });
-
 });
 
 server.listen(3001, () => {
   console.log("SERVER RUNNING");
 });
+
+
+var intervalSeconds = 0;
+const timeoutSeconds = 15;
+setInterval(() => {
+  if (io.engine.clientsCount < 1) {
+    console.log("Server inactive, waiting %d seconds to shut down: ", timeoutSeconds - intervalSeconds);
+    intervalSeconds++;
+    if (intervalSeconds === timeoutSeconds) {
+      console.log("Shutting down server...");
+      process.exit(0);
+    }
+  }
+  else {
+    interval = 0;
+  }
+}, 1000);
