@@ -16,13 +16,38 @@ function App() {
   const [generatedFirstName, setGeneratedFirstName] = useState('');
   const [generatedLastName, setGeneratedLastName] = useState('');
 
+  // All supported by DeepL
   const languageOptions = [
     { value: "en", label: "English" },
     { value: "es", label: "Español" },
     { value: "ko", label: "Korean" },
     { value: "ja", label: "Japanese" },
-    // Add more language options as needed
+    { value: 'bg', label: 'Bulgarian' },
+    { value: 'cs', label: 'Czech' },
+    { value: 'da', label: 'Danish' },
+    { value: 'de', label: 'German' },
+    { value: 'el', label: 'Greek' },
+    { value: 'et', label: 'Estonian' },
+    { value: 'fi', label: 'Finnish' },
+    { value: 'fr', label: 'French' },
+    { value: 'hu', label: 'Hungarian' },
+    { value: 'id', label: 'Indonesian' },
+    { value: 'it', label: 'Italian' },
+    { value: 'lt', label: 'Lithuanian' },
+    { value: 'lv', label: 'Latvian' },
+    { value: 'nb', label: 'Norwegian (Bokmål)' },
+    { value: 'nl', label: 'Dutch' },
+    { value: 'pl', label: 'Polish' },
+    { value: 'ro', label: 'Romanian' },
+    { value: 'ru', label: 'Russian' },
+    { value: 'sk', label: 'Slovak' },
+    { value: 'sl', label: 'Slovenian' },
+    { value: 'sv', label: 'Swedish' },
+    { value: 'tr', label: 'Turkish' },
+    { value: 'uk', label: 'Ukrainian' },
+    { value: 'zh', label: 'Chinese' }
   ];
+
   // Lists of colors and animals 
   const firstNames = [
     'Stupid', 'Smart', 'Dumb', 'Crazy', 'Insane',
@@ -34,6 +59,7 @@ function App() {
     'KuangYi', 'Phileo', 'Rayray', 'Gabby', 'Fred',
     'Please', 'Send', 'HELP', 'Duck', 'Horse'
   ];
+  
   //  Generate random name. 
   useEffect(() => {
     const randomFirstName =

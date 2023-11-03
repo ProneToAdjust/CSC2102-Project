@@ -7,6 +7,7 @@ const { setTimeout } = require("timers/promises");
 app.use(cors());
 
 // DeepL API configuration
+// NOTE: Limited to 500,000 characters per month
 const deepl = require('deepl-node');
 const authKey = 'a436cf8d-3c06-560d-b5fc-8ed1256b5d96:fx';
 const translator = new deepl.Translator(authKey);
@@ -29,15 +30,15 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    console.log(data)
     var receiveData = {};
+    // Check if user wants to translate their message
     if (data.toTranslateMsg) {
       const message = data.message;
       const yourLanguage = data.yourLanguage;
-      const learnLanguage = data.learnLanguage === "en" ? "en-US" : data.learnLanguage;
+      const learnLanguage = data.learnLanguage === "en" ? "en-US" : data.learnLanguage; // Using US English in this case
       translator.translateText(message, yourLanguage, learnLanguage)
       .then(results => {
-        console.log(results);
+        // console.log(results);
         receiveData = {
           room: data.room,
           author: data.author,
@@ -55,6 +56,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);
   });
+
   socket.on("addKeyValuePair", (data) => {
     const username = data.username;
     const language = data.language;
@@ -66,6 +68,7 @@ io.on("connection", (socket) => {
     // Emit the updated dictionary to all connected clients
     io.emit("updateDictionary", dictionary);
   });
+
   // socket.on("translate_message", (data) => {
   //   const messageData = data.messageData;
   //   const message = messageData.message;
