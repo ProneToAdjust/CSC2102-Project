@@ -24,7 +24,7 @@ function WaitRoom({ socket, username, room, dictionary, yourLanguage, learnLangu
   return (
     <div className="App">
       {showChat ? (
-        <Chat socket={socket} username={username} room={room} dictionary={dictionary} />
+        <Chat socket={socket} username={username} room={room} dictionary={dictionary} yourLanguage={yourLanguage} learnLanguage={learnLanguage} />
       ) : (
          (
             <div className="wait-message">

@@ -19,8 +19,8 @@ function App() {
   const languageOptions = [
     { value: "en", label: "English" },
     { value: "es", label: "Español" },
-    { value: "kr", label: "Korean" },
-    { value: "jp", label: "Japanese" },
+    { value: "ko", label: "Korean" },
+    { value: "ja", label: "Japanese" },
     // Add more language options as needed
   ];
   // Lists of colors and animals 

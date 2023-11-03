@@ -6,6 +6,10 @@ const { Server } = require("socket.io");
 const { setTimeout } = require("timers/promises");
 app.use(cors());
 
+// DeepL API configuration
+const deepl = require('deepl-node');
+const authKey = 'a436cf8d-3c06-560d-b5fc-8ed1256b5d96:fx';
+const translator = new deepl.Translator(authKey);
 
 const server = http.createServer(app);
 
@@ -25,7 +29,27 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    socket.to(data.room).emit("receive_message", data);
+    console.log(data)
+    var receiveData = {};
+    if (data.toTranslateMsg) {
+      const message = data.message;
+      const yourLanguage = data.yourLanguage;
+      const learnLanguage = data.learnLanguage === "en" ? "en-US" : data.learnLanguage;
+      translator.translateText(message, yourLanguage, learnLanguage)
+      .then(results => {
+        console.log(results);
+        receiveData = {
+          room: data.room,
+          author: data.author,
+          message: results.text,
+          time: data.time
+        }
+        socket.to(data.room).emit("receive_message", receiveData);
+      })
+    } else {
+      receiveData = data;
+      socket.to(data.room).emit("receive_message", receiveData);
+    }
   });
 
   socket.on("disconnect", () => {
@@ -42,6 +66,27 @@ io.on("connection", (socket) => {
     // Emit the updated dictionary to all connected clients
     io.emit("updateDictionary", dictionary);
   });
+  // socket.on("translate_message", (data) => {
+  //   const messageData = data.messageData;
+  //   const message = messageData.message;
+  //   const yourLanguage = data.yourLanguage;
+  //   const learnLanguage = data.learnLanguage === "en" ? "en-US" : data.learnLanguage;
+
+  //   translator.translateText(message, yourLanguage, learnLanguage)
+  //   .then((results) => {
+  //     console.log(results)
+  //     const receiveMsg = {
+  //       room: messageData.room,
+  //       author: messageData.author,
+  //       message: results.text,
+  //       time: messageData.time
+  //     }
+  //     socket.to(messageData.room).emit("receive_message", receiveMsg);
+  //   })
+  //   .catch((error) => {
+  //     console.error(error)
+  //   })
+  // })
 });
 
 server.listen(3001, () => {

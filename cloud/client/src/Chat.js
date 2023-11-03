@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-function Chat({ socket, username, room }) {
+function Chat({ socket, username, room, yourLanguage, learnLanguage }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const [toTranslateMsg, setToTranslateMsg] = useState(false);
+  const [btnStyle, setBtnStyle] = useState({ color: 'lightgray' })
 
   const sendMessage = async () => {
     if (currentMessage !== "") {
@@ -14,6 +16,9 @@ function Chat({ socket, username, room }) {
           new Date(Date.now()).getHours() +
           ":" +
           new Date(Date.now()).getMinutes(),
+        toTranslateMsg,
+        yourLanguage,
+        learnLanguage
       };
 
       await socket.emit("send_message", messageData);
@@ -22,9 +27,13 @@ function Chat({ socket, username, room }) {
     }
   };
 
+  const translateMessage = () => {
+    setToTranslateMsg(!toTranslateMsg);
+  }
+
   useEffect(() => {
-    socket.on("receive_message", (data) => {
-      setMessageList((list) => [...list, data]);
+    socket.on("receive_message", (receiveData) => {
+      setMessageList((list) => [...list, receiveData]);
     });
   }, [socket]);
 
@@ -66,6 +75,7 @@ function Chat({ socket, username, room }) {
           }}
         />
         <button onClick={sendMessage}>&#9658;</button>
+        <button style={toTranslateMsg ? { color: '#43a047' } : {color: 'lightgray'}} onClick={translateMessage}>Translate?</button>
       </div>
     </div>
   );
