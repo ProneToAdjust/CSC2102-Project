@@ -69,6 +69,13 @@ io.on("connection", (socket) => {
     io.emit("updateDictionary", dictionary);
   });
 
+  socket.on("removeKeyValuePair", (username) => {    
+    delete dictionary[username];
+
+    // Emit the updated dictionary to all connected clients
+    io.emit("updateDictionary", dictionary);
+  })
+
   // socket.on("translate_message", (data) => {
   //   const messageData = data.messageData;
   //   const message = messageData.message;
