@@ -5,8 +5,8 @@ RUN pip install docker
 RUN pip install flask
 CMD ["python", "./main.py"] 
 
-# TO BUILD DOCKER IMAGE
+# BUILD DOCKER IMAGE
 # docker build -t backend .
 
-# RUN DOCKER IMAGE WITH THE FOLLOWING AS VOLUME
-# docker run -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 backend:latest
+# RUN DOCKER IMAGE
+# docker run -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 backend:latest
