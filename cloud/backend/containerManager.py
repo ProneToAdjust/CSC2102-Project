@@ -14,7 +14,7 @@ class Container:
 def createContainer() -> str:
     port = _getAvailablePort()
     # Create a container
-    container = client.containers.run("server:latest", detach=True, ports={'3001/tcp': port})
+    container = client.containers.run("chatroom:latest", detach=True, ports={'3001/tcp': port})
     # Add the container to the dictionary
     containers[container.id] = Container(port)
     # Return the container ID
@@ -88,7 +88,7 @@ class ContainerCleanupThread(threading.Thread):
         while True:
             # Delete containers that are the server image
             for container in client.containers.list(all=True):
-                if container.image.tags[0] == "server:latest" or container.image.tags[0] == "server":
+                if container.image.tags[0] == "chatroom:latest" or container.image.tags[0] == "chatroom":
                     if not isContainerRunning(container.id):
                         deleteContainer(container.id)
                         print("Deleted container: " + container.id)
