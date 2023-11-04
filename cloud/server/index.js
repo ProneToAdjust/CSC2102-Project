@@ -116,6 +116,6 @@ setInterval(() => {
     }
   }
   else {
-    interval = 0;
+    intervalSeconds = 0;
   }
 }, 1000);
