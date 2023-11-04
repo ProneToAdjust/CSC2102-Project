@@ -9,4 +9,4 @@ CMD ["node", "index.js"]
 EXPOSE 3001
 
 # Build image with
-# docker build -t server .
+# docker build -t chatroom .
