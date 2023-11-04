@@ -37,6 +37,11 @@ function Chat({ socket, username, room, yourLanguage, learnLanguage }) {
     });
   }, [socket]);
 
+  const handleLeaveRoom = () => {
+    window.location.reload(false);
+    socket.emit("removeKeyValuePair", socket.id);
+  }
+
   return (
     <div className="chat-window">
       <div className="chat-header">
@@ -76,6 +81,9 @@ function Chat({ socket, username, room, yourLanguage, learnLanguage }) {
         />
         <button onClick={sendMessage}>&#9658;</button>
         <button style={toTranslateMsg ? { color: '#43a047' } : {color: 'lightgray'}} onClick={translateMessage}>Translate?</button>
+      </div>
+      <div className="chat-backbtn" style={{ padding: "10px", paddingLeft: "360px" }}>
+        <button onClick={handleLeaveRoom} style={{ color: "black", backgroundColor: "lightblue", border: "white", padding: "8px", fontWeight: "bold" }}>Leave Room</button>
       </div>
     </div>
   );
