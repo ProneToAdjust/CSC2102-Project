@@ -1,9 +1,9 @@
 FROM python:3.11-slim
-ADD server.py .
+ADD main.py .
 ADD containerManager.py .
 RUN pip install docker
 RUN pip install flask
-CMD ["python", "./server.py"] 
+CMD ["python", "./main.py"] 
 
 # TO BUILD DOCKER IMAGE
 # docker build -t backend .
