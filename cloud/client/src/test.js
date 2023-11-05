@@ -11,10 +11,6 @@ function WaitRoom({ username, room, yourLanguage, learnLanguage }) {
   const combinedLang = yourLanguage + learnLanguage;
   const roomCount = Object.keys(dictionary).length;
 
-  console.log(roomCount);
-  console.log(yourLanguage);
-  console.log(learnLanguage);
-
   useEffect(() => {
     // Create and connect the socket only once
     if (!socket) {
@@ -30,13 +26,19 @@ function WaitRoom({ username, room, yourLanguage, learnLanguage }) {
       });
     }
 
+    if (roomCount > 0 && roomCount % 2 === 0) {
+      socket.emit("join_room", room);
+      setShowChat(true);
+    }
+
     // Clean up event listeners when the component unmounts
     return () => {
       if (socket) {
         socket.off("updateDictionary");
+        socket.disconnect();
       }
     };
-  }, [username, combinedLang, room, socket]);
+  }, [username, combinedLang, roomCount, room, socket]);
 
   const handleLeaveWaitRoom = () => {
     if (socket) {
@@ -44,18 +46,6 @@ function WaitRoom({ username, room, yourLanguage, learnLanguage }) {
       socket.disconnect();
     }
     setLandingPage(true);
-  }
-
-  // Watch the dictionary state and trigger handleJoinRoom() when it changes
-  useEffect(() => {
-    handleJoinRoom();
-  }, [dictionary]);
-
-  const handleJoinRoom = () => {
-    if (roomCount > 0 && roomCount % 2 === 0) {
-      socket.emit("join_room", room);
-      setShowChat(true);
-    }
   }
 
   return (

@@ -74,6 +74,8 @@ io.on("connection", (socket) => {
 
     // Emit the updated dictionary to all connected clients
     io.emit("updateDictionary", dictionary);
+    socket.disconnect();
+
   })
 
   // socket.on("translate_message", (data) => {
