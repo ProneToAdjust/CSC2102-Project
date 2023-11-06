@@ -27,6 +27,20 @@ function Chat({ socket, username, room, yourLanguage, learnLanguage }) {
     }
   };
 
+  const sendSystemMessage = (message) => {
+    const systemMessage = {
+      room: room,
+      author: 'System',
+      message: message,
+      time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+      toTranslateMsg: false, // System messages should not be translated
+      yourLanguage,
+      learnLanguage
+    };
+    socket.emit("send_message", systemMessage);
+    setMessageList((list) => [...list, systemMessage]);
+  }
+
   const translateMessage = () => {
     setToTranslateMsg(!toTranslateMsg);
   }
@@ -38,6 +52,7 @@ function Chat({ socket, username, room, yourLanguage, learnLanguage }) {
   }, [socket]);
 
   const handleLeaveRoom = () => {
+    sendSystemMessage(`System Generated Message: ${username} has left the chat.`);
     window.location.reload(false);
     socket.emit("removeKeyValuePair", socket.id);
   }
@@ -48,24 +63,27 @@ function Chat({ socket, username, room, yourLanguage, learnLanguage }) {
         <p>Chat Room {room}</p> {/* Update the text here */}
       </div>
       <div className="chat-body">
-          {messageList.map((messageContent) => {
-            return (
-              <div
-                className="message"
-                id={username === messageContent.author ? "you" : "other"}
-              >
-                <div>
-                  <div className="message-content">
-                    <p>{messageContent.message}</p>
-                  </div>
-                  <div className="message-meta">
-                    <p id="time">{messageContent.time}</p>
-                    <p id="author">{messageContent.author}</p>
-                  </div>
+        {messageList.map((messageContent) => {
+          const isSystemMessage = messageContent.author === 'System';
+          const messageClassName = isSystemMessage ? 'system-message' : '';
+
+          return (
+            <div
+              className={`message ${messageClassName}`}
+              id={username === messageContent.author ? 'you' : 'other'}
+            >
+              <div>
+                <div className="message-content">
+                  <p>{messageContent.message}</p>
+                </div>
+                <div className="message-meta">
+                  <p id="time">{messageContent.time}</p>
+                  <p id="author">{messageContent.author}</p>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
       </div>
       <div className="chat-footer">
         <input
