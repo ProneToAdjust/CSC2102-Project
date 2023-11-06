@@ -18,7 +18,7 @@ waiting_list = defaultdict(lambda: queue.Queue(), waiting_list)
 @app.route('/chatroom')
 def chatroom():
     # get user_language, desired_language from request
-    # example request: http://localhost:3000/chatroom?user_language=english&desired_language=spanish
+    # example request: http://localhost:4000/chatroom?user_language=english&desired_language=spanish
     user_language = request.args.get('user_language')
     desired_language = request.args.get('desired_language')
 
