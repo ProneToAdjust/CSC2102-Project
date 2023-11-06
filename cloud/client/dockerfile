@@ -10,4 +10,4 @@ CMD ["npm", "start"]
 EXPOSE 3000
 
 # Build image with
-# docker build -t client .
+# docker build -t client:latest .

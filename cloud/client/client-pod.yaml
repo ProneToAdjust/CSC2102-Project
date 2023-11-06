@@ -1,10 +1,99 @@
+# Fred testing
+# Check if have  CustomResourceDefinition (CRD) for HorizontalPodAutoscaler in the autoscaling/v2beta1 version installed with
+# kubectl get crds | findstr horizontalpodautoscalers
+
+# Install CRDs with
+# kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.5.0/components.yaml
+
+# Check status and wait for deployment to reach a 1/1 available status with
+# kubectl get deployment metrics-server -n kube-system
+# kubectl get pods -n kube-system -l k8s-app=metrics-server
+
+# If after awhile doesn't change to 1 under Available, then do
+# minikube addons list
+
+# If under the list, metrics-server is disabled, then do
+# minikube addons enable metrics-server
+
+#
+# minikube docker-env
+
+# 
+# set DOCKER_TLS_VERIFY=1
+# set DOCKER_HOST=tcp://192.168.49.2:2376
+# set DOCKER_CERT_PATH=C:\Users\<your-username>\.minikube\certs
+# set MINIKUBE_ACTIVE_DOCKERD=minikube
+
+# Then run
+# kubectl apply -f client-pod.yaml
+
 apiVersion: v1
 kind: Pod
 metadata:
-   name: client-pod
+  name: client-pod
 spec:
-   containers:
-   - name: client-container01
-     image: client:latest
-     ports:
-     - containerPort: 3000
+  containers:
+  - name: client-container01
+    image: client:latest
+    ports:
+    - containerPort: 3000
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-service
+spec:
+  type: NodePort
+  selector:
+    app: client-app
+  ports:
+  - port: 80
+    targetPort: 3000
+    nodePort: 30000
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: client-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: client-deployment
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 50
+
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: client-pod
+# spec:
+#   containers:
+#    - name: client-container01
+#      image: client:latest
+#      ports:
+#      - containerPort: 3000
