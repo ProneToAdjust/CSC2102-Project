@@ -3,7 +3,6 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const { setTimeout } = require("timers/promises");
 app.use(cors());
 
 // DeepL API configuration
@@ -16,11 +15,12 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:30000",
     methods: ["GET", "POST"],
   },
 });
 const dictionary = {};
+let listOfAvailPorts = [];
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
@@ -78,6 +78,30 @@ io.on("connection", (socket) => {
 
   })
 
+  socket.on("addAndCheckPort", (portnum, callback) => {
+    listOfAvailPorts.push(portnum);
+
+    //loop through array and find duplicate
+    res = firstDuplicate(listOfAvailPorts);
+
+    //if no duplicate, return false
+    if(res == false){
+      callback(false);
+    }
+    else{
+      callback(true);
+    }
+  })
+
+  socket.on("removePort", (portnum) => {
+    //remove portnum from array
+    removedArr = listOfAvailPorts.filter((ports) => {
+      return ports != portnum;
+    })
+    listOfAvailPorts = removedArr;
+
+  })
+
   // socket.on("translate_message", (data) => {
   //   const messageData = data.messageData;
   //   const message = messageData.message;
@@ -100,6 +124,18 @@ io.on("connection", (socket) => {
   //   })
   // })
 });
+
+//Find duplicates in array
+function firstDuplicate(arr){
+  let elementSet = new Set();
+
+  for (let i=0; i<arr.length; i++){
+    if (elementSet.has(arr[i])) return arr[i];
+    elementSet.add(arr[i]);
+  }
+
+  return false;
+}
 
 server.listen(3001, () => {
   console.log("SERVER RUNNING");

@@ -60,7 +60,7 @@ function Chat({ socket, username, room, yourLanguage, learnLanguage }) {
   return (
     <div className="chat-window">
       <div className="chat-header">
-        <p>Chat Room {room}</p> {/* Update the text here */}
+        <p>Chat Room</p> {/* Update the text here */}
       </div>
       <div className="chat-body">
         {messageList.map((messageContent) => {

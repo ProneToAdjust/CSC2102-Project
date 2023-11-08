@@ -3,7 +3,7 @@ import Chat from "./Chat";
 import App from "./App";
 import io from "socket.io-client";
 
-function WaitRoom({ username, room, yourLanguage, learnLanguage }) {
+function WaitRoom({ username, yourLanguage, learnLanguage, portNumber }) {
   const [socket, setSocket] = useState(null);
   const [showChat, setShowChat] = useState(false);
   const [landingPage, setLandingPage] = useState(false);
@@ -11,14 +11,10 @@ function WaitRoom({ username, room, yourLanguage, learnLanguage }) {
   const combinedLang = yourLanguage + learnLanguage;
   const roomCount = Object.keys(dictionary).length;
 
-  console.log(roomCount);
-  console.log(yourLanguage);
-  console.log(learnLanguage);
-
   useEffect(() => {
     // Create and connect the socket only once
     if (!socket) {
-      const newSocket = io("http://localhost:3001");
+      const newSocket = io.connect('http://localhost:' + portNumber);
       setSocket(newSocket);
 
       newSocket.on("connect", () => {
@@ -28,15 +24,25 @@ function WaitRoom({ username, room, yourLanguage, learnLanguage }) {
       newSocket.on("updateDictionary", (updatedDictionary) => {
         setDictionary(updatedDictionary);
       });
+
+      newSocket.emit("addAndCheckPort", portNumber, (res) => {
+        if (res != false) {
+          newSocket.emit("removePort", portNumber);
+          newSocket.emit("join_room", portNumber);
+          setShowChat(true);
+        }
+      })
     }
+
+    handleJoinRoom();
 
     // Clean up event listeners when the component unmounts
     return () => {
-      if (socket) {
+      if (socket) { 
         socket.off("updateDictionary");
       }
     };
-  }, [username, combinedLang, room, socket]);
+  }, [username, combinedLang, socket]);
 
   const handleLeaveWaitRoom = () => {
     if (socket) {
@@ -53,7 +59,7 @@ function WaitRoom({ username, room, yourLanguage, learnLanguage }) {
 
   const handleJoinRoom = () => {
     if (roomCount > 0 && roomCount % 2 === 0) {
-      socket.emit("join_room", room);
+      socket.emit("join_room", portNumber);
       setShowChat(true);
     }
   }
@@ -61,7 +67,7 @@ function WaitRoom({ username, room, yourLanguage, learnLanguage }) {
   return (
     <div className="App">
       {showChat ? (
-        <Chat socket={socket} username={username} room={room} dictionary={dictionary} yourLanguage={yourLanguage} learnLanguage={learnLanguage} />
+        <Chat socket={socket} username={username} room={portNumber} dictionary={dictionary} yourLanguage={yourLanguage} learnLanguage={learnLanguage} />
       ) : (!landingPage ? (
         (
           <div className="wait-display">

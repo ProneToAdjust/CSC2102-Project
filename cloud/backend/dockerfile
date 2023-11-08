@@ -3,6 +3,7 @@ ADD main.py .
 ADD containerManager.py .
 RUN pip install docker
 RUN pip install flask
+RUN pip install flask-cors
 CMD ["python", "./main.py"] 
 
 # BUILD DOCKER IMAGE

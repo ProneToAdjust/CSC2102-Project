@@ -6,16 +6,19 @@ If there is no waiting chatroom in the queue, the server creates one and adds th
 If there is a waiting chatroom in the queue, the server pops the chatroom id from the waiting list.
 """
 from flask import Flask, request, make_response
+from flask_cors import CORS, cross_origin
 import queue
 from collections import defaultdict
 import containerManager
 
 app = Flask(__name__)
+app.config['CORS_HEADER'] = 'Content-Type'
 
 waiting_list = {}
 waiting_list = defaultdict(lambda: queue.Queue(), waiting_list)
 
 @app.route('/chatroom')
+@cross_origin()
 def chatroom():
     # get user_language, desired_language from request
     # example request: http://localhost:4000/chatroom?user_language=english&desired_language=spanish

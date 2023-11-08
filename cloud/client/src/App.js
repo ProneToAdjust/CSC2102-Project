@@ -2,16 +2,15 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { getCookie, setCookie } from "./cookieUtils"; // Import your cookie utility functions.
 import WaitRoom from "./WaitRoom";
-import io from "socket.io-client";
 
 function App() {
   const [username, setUsername] = useState("");
-  const [room, setRoom] = useState("");
   const [yourLanguage, setYourLanguage] = useState(getCookie("userLanguage") || ""); // Initialize with the value from the cookie, if available.
   const [learnLanguage, setLearnLanguage] = useState(getCookie("newLang") || ""); // Initialize with the value from the cookie, if available.
   const [waitRoom, setWaitRoom] = useState(false);
   const [generatedFirstName, setGeneratedFirstName] = useState('');
   const [generatedLastName, setGeneratedLastName] = useState('');
+  const [portNumber, setPortNumber] = useState('');
 
 
   // All supported by DeepL
@@ -68,13 +67,12 @@ function App() {
     setGeneratedFirstName(randomFirstName);
     setGeneratedLastName(randomLastName);
     setUsername(randomFirstName + randomLastName);
-    console.log(username);
   }, []);
 
 
   const joinRoom = () => {
 
-    if (username !== "" && room !== "") {
+    if (username !== "") {
       // Store the language preferences in cookies when joining the room.
       if (yourLanguage !== "") {
         setCookie("userLanguage", yourLanguage, 365); // You can adjust the expiration time as needed.
@@ -82,28 +80,33 @@ function App() {
       if (learnLanguage !== "") {
         setCookie("newLang", learnLanguage, 365); // You can adjust the expiration time as needed.
       }
-      setWaitRoom(true);
 
+      let params = "user_language=" + yourLanguage + "&desired_language=" + learnLanguage
+      const request = new Request("http://localhost:30001/chatroom?" + params, {
+        method: "get",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json"
+        }
+      })
+
+      fetch(request).then(res => {
+        return res.json()
+      }).then(data => {
+        setPortNumber(data.chatroom_port);
+        setWaitRoom(true);
+      })     
     }
   };
-
-
 
   return (
     <div className="App">
       {(
         waitRoom ? (
-          <WaitRoom username={username} room={room} yourLanguage={yourLanguage} learnLanguage={learnLanguage} />
+          <WaitRoom username={username} yourLanguage={yourLanguage} learnLanguage={learnLanguage} portNumber={portNumber}/>
         ) : (
           <div className="joinChatContainer">
             <h3>Join A Chat</h3>
-            <input
-              type="text"
-              placeholder="Room ID..."
-              onChange={(event) => {
-                setRoom(event.target.value);
-              }}
-            />
             <div>
               <select
                 value={yourLanguage}
