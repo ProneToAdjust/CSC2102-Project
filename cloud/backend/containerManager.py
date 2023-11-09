@@ -88,7 +88,7 @@ class ContainerCleanupThread(threading.Thread):
         while True:
             # Delete containers that are the server image
             for container in client.containers.list(all=True):
-                if container.image.tags[0] == "chatroom:latest" or container.image.tags[0] == "chatroom":
+                if container.attrs['Config']['Image'] == "chatroom:latest" or container.attrs['Config']['Image'] == "chatroom":
                     if not isContainerRunning(container.id):
                         deleteContainer(container.id)
                         print("Deleted container: " + container.id)
