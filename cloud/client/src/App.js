@@ -47,14 +47,12 @@ function App() {
 
   // Lists of colors and animals 
   const firstNames = [
-    'Stupid', 'Smart', 'Dumb', 'Crazy', 'Insane',
-    'Silly', 'Funny', 'Weird', 'Strange', 'Normal',
-    'Desperate', 'Gay', 'Racist', 'Sad', 'Angry'
+    'blue', 'red', 'green', 'yellow', 'orange',
+    'purple', 'pink', 'black', 'white', 'brown',
   ];
   const lastNames = [
-    'YaoTeck', 'Ryan', 'Keagan', 'Mirza', 'JW',
-    'KuangYi', 'Phileo', 'Rayray', 'Gabby', 'Fred',
-    'Please', 'Send', 'HELP', 'Duck', 'Horse'
+    'Horse', 'Dog', 'Cat', 'Bird', 'Fish',
+    'Tiger', 'Lion', 'Bear', 'Monkey', 'Snake',
   ];
 
   //  Generate random name. 
