@@ -2,7 +2,7 @@
 ## How to start
 ### Prerequisites
 - Docker
-- Kubernetes
+- Kubernetes (Docker desktop)
 
 ### Windows Configuration
 To build the docker image, run the following command in the root directory of the project:
