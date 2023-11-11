@@ -84,3 +84,21 @@ To send a translated message, click on the 'Translate?' button and the messages 
 If you repeat the steps above to make another chatroom, you will notice a new container with a different port is created for the new chatroom.
 
 ![Alt text](readme_images/new_chatroom_container.png)
+
+#### Stress testing HPA
+To stress test the HPA functionality of the client pod, run the following commands:
+```
+pip install locust
+cd cloud/client
+locust
+```
+Then go to `localhost:8089` and enter the following values:
+```
+Number of total users to simulate: 100
+Hatch rate (users spawned/second): 10
+Host: http://localhost:30000
+```
+When you click `Start swarming`, you will see the number of users increase to 100 and the CPU usage of the client pod increase and scale according to the number of users.
+```
+kubectl get hpa
+```
