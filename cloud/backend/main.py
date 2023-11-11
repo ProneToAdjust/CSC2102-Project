@@ -1,7 +1,7 @@
 """
 This module contains a Flask server that creates chatrooms for users to communicate in different languages.
-The server listens on port 3000 and has a single endpoint '/chatroom' that accepts GET requests with two query parameters:
-'user_language' and 'desired_language'. The server creates a chatroom for the user and returns the chatroom's IP address and port number.
+The server listens on port 4000 and has a single endpoint '/chatroom' that accepts GET requests with two query parameters:
+'user_language' and 'desired_language'. The server creates a chatroom for the user and returns the chatroom's port number for the frontend to open a socket connection to.
 If there is no waiting chatroom in the queue, the server creates one and adds the chatroom id to the waiting list for the other language.
 If there is a waiting chatroom in the queue, the server pops the chatroom id from the waiting list.
 """
