@@ -102,3 +102,21 @@ When you click `Start swarming`, you will see the number of users increase to 10
 ```
 kubectl get hpa
 ```
+
+#### Stress testing chatroom creation
+To stress test the chatroom creation functionality of the backend pod, run the following commands:
+```
+pip install locust
+cd cloud/backend
+locust
+```
+Then go to `localhost:8089` and enter the following values:
+```
+Number of total users to simulate: 1
+Hatch rate (users spawned/second): 1
+Host: http://localhost:30001
+```
+When you click `Start swarming`, you will see the number of users increase to 100 and the CPU usage of the backend pod increase and scale according to the number of users.
+```
+kubectl get hpa
+```
