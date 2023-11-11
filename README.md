@@ -1,4 +1,4 @@
-# CSC3104-Project
+# CSC3104-Project Group 21
 ## How to start
 ### Prerequisites
 - Docker
