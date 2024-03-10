@@ -3,12 +3,12 @@ import Chat from "./Chat";
 import App from "./App";
 import io from "socket.io-client";
 
-function WaitRoom({ username, yourLanguage, learnLanguage, portNumber }) {
+function WaitRoom({ username, yourSubject, learnSubject, portNumber }) {
   const [socket, setSocket] = useState(null);
   const [showChat, setShowChat] = useState(false);
   const [landingPage, setLandingPage] = useState(false);
   const [dictionary, setDictionary] = useState({});
-  const combinedLang = yourLanguage + learnLanguage;
+  const combinedSubj = yourSubject + learnSubject;
   const roomCount = Object.keys(dictionary).length;
 
   useEffect(() => {
@@ -18,7 +18,7 @@ function WaitRoom({ username, yourLanguage, learnLanguage, portNumber }) {
       setSocket(newSocket);
 
       newSocket.on("connect", () => {
-        newSocket.emit("addKeyValuePair", { username, language: combinedLang });
+        newSocket.emit("addKeyValuePair", { username, subject: combinedSubj });
       });
 
       newSocket.on("updateDictionary", (updatedDictionary) => {
@@ -42,7 +42,7 @@ function WaitRoom({ username, yourLanguage, learnLanguage, portNumber }) {
         socket.off("updateDictionary");
       }
     };
-  }, [username, combinedLang, socket]);
+  }, [username, combinedSubj, socket]);
 
   const handleLeaveWaitRoom = () => {
     if (socket) {
@@ -67,7 +67,7 @@ function WaitRoom({ username, yourLanguage, learnLanguage, portNumber }) {
   return (
     <div className="App">
       {showChat ? (
-        <Chat socket={socket} username={username} room={portNumber} dictionary={dictionary} yourLanguage={yourLanguage} learnLanguage={learnLanguage} />
+        <Chat socket={socket} username={username} room={portNumber} dictionary={dictionary} yourSubject={yourSubject} learnSubject={learnSubject} />
       ) : (!landingPage ? (
         (
           <div className="wait-display">
