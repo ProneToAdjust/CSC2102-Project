@@ -1,9 +1,9 @@
 """
-This module contains a Flask server that creates chatrooms for users to communicate in different languages.
-The server listens on port 4000 and has a single endpoint '/chatroom' that accepts GET requests with two query parameters:
-'user_language' and 'desired_language'. The server creates a chatroom for the user and returns the chatroom's port number for the frontend to open a socket connection to.
-If there is no waiting chatroom in the queue, the server creates one and adds the chatroom id to the waiting list for the other language.
-If there is a waiting chatroom in the queue, the server pops the chatroom id from the waiting list.
+This module contains a Flask server that creates and manages classroom containers.
+The server listens on port 4000 and has a single endpoint '/classroom' that accepts GET requests with two query parameters:
+'user_role' and 'desired_subject'. The server creates a classroom container for the user and returns the containers's port number for the frontend to open a socket connection to.
+If there is no waiting classroom in the queue, the server creates one and adds the classroom container's id to the waiting list for the other role.
+If there is a waiting classroom in the queue, the server pops the classroom container's id from the waiting list.
 """
 from flask import Flask, request, make_response
 from flask_cors import CORS, cross_origin
