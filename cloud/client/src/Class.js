@@ -100,4 +100,4 @@ function Class({ socket, username, room, yourSubject, learnSubject }) {
   );
 }
 
-export default Classroom;
+export default Class;
