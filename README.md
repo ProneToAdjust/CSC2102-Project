@@ -7,7 +7,7 @@
 ### Windows Configuration
 To build the docker image, run the following command in the root directory of the project:
 ```
-cd cloud\classroom
+cd cloud\chatroom
 apply.bat
 ```
 To build the kubernetes server, run the following command in the root directory of the project:
@@ -25,7 +25,7 @@ apply.bat
 ### Mac Configuration
 To build the docker image, run the following command in the root directory of the project:
 ```
-cd cloud/classroom
+cd cloud/chatroom
 bash apply.sh
 ```
 To build the kubernetes server, run the following command in the root directory of the project:
@@ -45,8 +45,8 @@ Now when you run `kubectl get all` you should see the following:
 
 ### Usage
 
-#### Classroom
-With the kubernetes server and client running, you can access the classroom by going to `localhost:30000/`
+#### Chatroom
+With the kubernetes server and client running, you can access the chatroom by going to `localhost:30000/`
 
 ![Landing Page](readme_images/landing_page.png)
 
@@ -62,13 +62,13 @@ For the purposes of this demo, you will need to open another browser window and 
 
 ![Second User](readme_images/second_user.png)
 
-Once the second user joins the room, you will be redirected to the classroom page.
+Once the second user joins the room, you will be redirected to the chatroom page.
 
-![Classroom](readme_images/classroom.png)
+![Chatroom](readme_images/chatroom.png)
 
-If you view the running containers in Docker Desktop, you will see the a container for the classroom would have been created.
+If you view the running containers in Docker Desktop, you will see the a container for the chatroom would have been created.
 
-![Alt text](readme_images/classroom_container.png)
+![Alt text](readme_images/chatroom_container.png)
 
 #### Translation
 
@@ -79,11 +79,11 @@ To send a translated message, click on the 'Translate?' button and the messages 
 ![Alt text](readme_images/chat_translate_enabled_sender.png)
 ![Alt text](readme_images/chat_translate_enabled_receiver.png)
 
-#### Classroom scaling
+#### Chatroom scaling
 
-If you repeat the steps above to make another classroom, you will notice a new container with a different port is created for the new classroom.
+If you repeat the steps above to make another chatroom, you will notice a new container with a different port is created for the new chatroom.
 
-![Alt text](readme_images/new_classroom_container.png)
+![Alt text](readme_images/new_chatroom_container.png)
 
 #### Stress testing HPA
 To stress test the HPA functionality of the client pod, run the following commands:
@@ -103,8 +103,8 @@ When you click `Start swarming`, you will see the number of users increase to 10
 kubectl get hpa
 ```
 
-#### Stress testing classroom creation
-To stress test the classroom creation functionality of the backend pod, run the following commands:
+#### Stress testing chatroom creation
+To stress test the chatroom creation functionality of the backend pod, run the following commands:
 ```
 pip install locust
 cd cloud/backend

@@ -27,14 +27,16 @@ def chatroom():
 
     # make key for waiting_list dictionary, e.g. 'english to spanish'
     waiting_list_key = user_language + ' to ' + desired_language
+
     # get chatroom queue from waiting list
     chatroom_queue = waiting_list[waiting_list_key]
 
-       # if there is no waiting chatroom in the queue,
+    # if there is no waiting chatroom in the queue,
     # create one and add chatroom id to waiting list for the other language
     # else, pop chatroom id from waiting list
     if chatroom_queue.qsize() == 0:
         chatroom_id = containerManager.createContainer()
+
         # create waiting list key for other language, e.g. 'spanish to english'
         waiting_list_key = desired_language + ' to ' + user_language
         waiting_list[waiting_list_key].put(chatroom_id)
@@ -52,44 +54,6 @@ def chatroom():
 
     return make_response(response, 200)
 
-@app.route('/classroom')
-@cross_origin()
-def classroom():
-    # get user_role, desired_subject from request
-    # example request(student): http://localhost:4000/classroom?user_role=student&desired_subject=math
-    # example request(tutor): http://localhost:4000/classroom?user_role=tutor&desired_subject=math
-
-    user_role = request.args.get('user_role')
-    desired_subject = request.args.get('desired_subject')
-
-    # make key for waiting_list dictionary, e.g. 'student for math' or 'tutor for math'
-    waiting_list_key = user_role + ' for ' + desired_subject
-
-    # get classroom queue from waiting list
-    classroom_queue = waiting_list[waiting_list_key]
-
-    # if there is no waiting classroom in the queue,
-    # create one and add classroom id to waiting list for the other role
-    # else, pop classroom id from waiting list
-    if classroom_queue.qsize() == 0:
-        classroom_id = containerManager.createContainer()
-
-        # create waiting list key for other role, e.g. 'tutor for math' or 'student for math'
-        waiting_list_key = 'tutor for ' + desired_subject if user_role == 'student' else 'student for ' + desired_subject
-        waiting_list[waiting_list_key].put(classroom_id)
-
-    else:
-        classroom_id = classroom_queue.get()
-
-    # get classroom port from container manager
-    classroom_port = containerManager.getContainerPort(classroom_id)
-
-    # create response json
-    response = {
-        'classroom_port': classroom_port
-    }
-
-    return make_response(response, 200)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=4000, debug=True)

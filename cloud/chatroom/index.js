@@ -34,9 +34,9 @@ io.on("connection", (socket) => {
     // Check if user wants to translate their message
     if (data.toTranslateMsg) {
       const message = data.message;
-      const yourSubject = data.yourSubject;
-      const learnSubject = data.learnSubject === "en" ? "en-US" : data.learnSubject; // Using US English in this case
-      translator.translateText(message, yourSubject, learnSubject)
+      const yourLanguage = data.yourLanguage;
+      const learnLanguage = data.learnLanguage === "en" ? "en-US" : data.learnLanguage; // Using US English in this case
+      translator.translateText(message, yourLanguage, learnLanguage)
       .then(results => {
         // console.log(results);
         receiveData = {
@@ -59,11 +59,11 @@ io.on("connection", (socket) => {
 
   socket.on("addKeyValuePair", (data) => {
     const username = data.username;
-    const subject = data.subject;
-    const combinedSubj = username + subject;
+    const language = data.language;
+    const combinedLang = username + language;
     
     // Handle the dictionary update, add the new key-value pair
-    dictionary[username] = combinedSubj;
+    dictionary[username] = combinedLang;
 
     // Emit the updated dictionary to all connected clients
     io.emit("updateDictionary", dictionary);
@@ -105,10 +105,10 @@ io.on("connection", (socket) => {
   // socket.on("translate_message", (data) => {
   //   const messageData = data.messageData;
   //   const message = messageData.message;
-  //   const yourSubject = data.yourSubject;
-  //   const learnSubject = data.learnSubject === "en" ? "en-US" : data.learnSubject;
+  //   const yourLanguage = data.yourLanguage;
+  //   const learnLanguage = data.learnLanguage === "en" ? "en-US" : data.learnLanguage;
 
-  //   translator.translateText(message, yourSubject, learnSubject)
+  //   translator.translateText(message, yourLanguage, learnLanguage)
   //   .then((results) => {
   //     console.log(results)
   //     const receiveMsg = {

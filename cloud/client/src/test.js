@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import Class from "./Class";
+import Chat from "./Chat";
 import App from "./App";
 import io from "socket.io-client";
 
-function WaitRoom({ username, room, yourSubject, learnSubject }) {
+function WaitRoom({ username, room, yourLanguage, learnLanguage }) {
   const [socket, setSocket] = useState(null);
-  const [showClass, setShowClass] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const [landingPage, setLandingPage] = useState(false);
   const [dictionary, setDictionary] = useState({});
-  const combinedSubj = yourSubject + learnSubject;
+  const combinedLang = yourLanguage + learnLanguage;
   const roomCount = Object.keys(dictionary).length;
 
   useEffect(() => {
@@ -18,7 +18,7 @@ function WaitRoom({ username, room, yourSubject, learnSubject }) {
       setSocket(newSocket);
 
       newSocket.on("connect", () => {
-        newSocket.emit("addKeyValuePair", { username, subject: combinedSubj });
+        newSocket.emit("addKeyValuePair", { username, language: combinedLang });
       });
 
       newSocket.on("updateDictionary", (updatedDictionary) => {
@@ -28,7 +28,7 @@ function WaitRoom({ username, room, yourSubject, learnSubject }) {
 
     if (roomCount > 0 && roomCount % 2 === 0) {
       socket.emit("join_room", room);
-      setShowClass(true);
+      setShowChat(true);
     }
 
     // Clean up event listeners when the component unmounts
@@ -38,7 +38,7 @@ function WaitRoom({ username, room, yourSubject, learnSubject }) {
         socket.disconnect();
       }
     };
-  }, [username, combinedSubj, roomCount, room, socket]);
+  }, [username, combinedLang, roomCount, room, socket]);
 
   const handleLeaveWaitRoom = () => {
     if (socket) {
@@ -50,15 +50,15 @@ function WaitRoom({ username, room, yourSubject, learnSubject }) {
 
   return (
     <div className="App">
-      {showClass ? (
-        <Class socket={socket} username={username} room={room} dictionary={dictionary} yourSubject={yourSubject} learnSubject={learnSubject} />
+      {showChat ? (
+        <Chat socket={socket} username={username} room={room} dictionary={dictionary} yourLanguage={yourLanguage} learnLanguage={learnLanguage} />
       ) : (!landingPage ? (
         (
           <div className="wait-display">
             <div className="wait-message">
               <p>Waiting for another user to join...</p>
               <div className="wait-backbtn" style={{ padding: "10px", paddingLeft: "70px" }}>
-                <button onClick={handleLeaveWaitRoom} style={{ color: "black", backgroundColor: "lightblue", border: "white", padding: "8px", fontWeight: "bold" }}>Leave Class</button>
+                <button onClick={handleLeaveWaitRoom} style={{ color: "black", backgroundColor: "lightblue", border: "white", padding: "8px", fontWeight: "bold" }}>Leave Room</button>
               </div>
             </div>
           </div>

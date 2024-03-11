@@ -13,17 +13,17 @@ body {
 }
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,700");
 
-.joinClassContainer {
+.joinChatContainer {
   display: flex;
   flex-direction: column;
   text-align: center;
 }
 
-.joinClassContainer h3 {
+.joinChatContainer h3 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
 }
-.joinClassContainer input {
+.joinChatContainer input {
   width: 225px;
   height: 50px;
   margin: 7px;
@@ -32,7 +32,7 @@ body {
   padding: 5px;
   font-size: 16px;
 }
-.joinClassContainer select {
+.joinChatContainer select {
   width: 240px;
   height: 50px;
   margin: 7px;
@@ -43,7 +43,7 @@ body {
 }
 
 
-.joinClassContainer button {
+.joinChatContainer button {
   width: 240px;
   height: 50px;
   margin: 7px;
@@ -56,11 +56,11 @@ body {
   cursor: pointer;
 }
 
-.joinClassContainer button:hover {
+.joinChatContainer button:hover {
   background: #2e7d32;
 }
 
-.class-window {
+.chat-window {
   width: 800px;
   height: 500px;
   display: flex;
@@ -70,7 +70,7 @@ body {
   border-radius: 6px;
 }
 
-.class-window .class-header {
+.chat-window .chat-header {
   height: 45px;
   background: #263238;
   color: #fff;
@@ -80,14 +80,14 @@ body {
   cursor: pointer;
 }
 
-.class-window .class-body {
+.chat-window .chat-body {
   flex: 1;
   overflow: auto;
   border-top: 1px solid #263238;
   background: #fff;
 }
 
-.class-window .class-body .message-container {
+.chat-window .chat-body .message-container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -97,17 +97,17 @@ body {
   overflow-x: hidden;
 }
 
-.class-window .class-body .message-container::-webkit-scrollbar {
+.chat-window .chat-body .message-container::-webkit-scrollbar {
   display: none;
 }
 
-.class-window .class-body .message {
+.chat-window .chat-body .message {
   display: flex;
   align-items: center;
   margin: 5px;
 }
 
-.class-window .class-body .message .message-content {
+.chat-window .chat-body .message .message-content {
   max-width: 60%;
   background-color: #43a047;
   border-radius: 5px;
@@ -148,19 +148,19 @@ body {
   font-weight: bold;
 }
 
-.class-window .class-body .message .message-meta {
+.chat-window .chat-body .message .message-meta {
   display: flex;
   font-size: 12px;
 }
 
-.class-window .class-footer {
+.chat-window .chat-footer {
   height: 40px;
   border: 1px solid #263238;
   border-top: none;
   display: flex;
 }
 
-.class-window .class-footer input {
+.chat-window .chat-footer input {
   flex: 85%;
   height: 100%;
   border: 0;
@@ -171,7 +171,7 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 
-.class-window .class-footer button {
+.chat-window .chat-footer button {
   flex: 15%;
   height: 100%;
   border: 0;
@@ -184,7 +184,7 @@ body {
   color: lightgray;
 }
 
-.class-window .class-footer button:hover {
+.chat-window .chat-footer button:hover {
   color: #43a047;
 }
 

@@ -5,8 +5,8 @@ import WaitRoom from "./WaitRoom";
 
 function App() {
   const [username, setUsername] = useState("");
-  const [yourSubject, setYourSubject] = useState(getCookie("userSubject") || ""); // Initialize with the value from the cookie, if available.
-  const [learnSubject, setLearnSubject] = useState(getCookie("newSubj") || ""); // Initialize with the value from the cookie, if available.
+  const [yourLanguage, setYourLanguage] = useState(getCookie("userLanguage") || ""); // Initialize with the value from the cookie, if available.
+  const [learnLanguage, setLearnLanguage] = useState(getCookie("newLang") || ""); // Initialize with the value from the cookie, if available.
   const [waitRoom, setWaitRoom] = useState(false);
   const [generatedFirstName, setGeneratedFirstName] = useState('');
   const [generatedLastName, setGeneratedLastName] = useState('');
@@ -14,15 +14,35 @@ function App() {
 
 
   // All supported by DeepL
-  const subjectOptions = [
+  const languageOptions = [
     { value: "en", label: "English" },
-    { value: "ch", label: "Chemistry" },
-    { value: "ma", label: "Mathematics" },
-    { value: "cn", label: "Chinese" },
-    { value: 'my', label: 'Malay' },
-    { value: 'tm', label: 'Tamil' },
-    { value: 'bi', label: 'Biology' },
-    { value: 'ph', label: 'Physics' },
+    { value: "es", label: "Español" },
+    { value: "ko", label: "Korean" },
+    { value: "ja", label: "Japanese" },
+    { value: 'bg', label: 'Bulgarian' },
+    { value: 'cs', label: 'Czech' },
+    { value: 'da', label: 'Danish' },
+    { value: 'de', label: 'German' },
+    { value: 'el', label: 'Greek' },
+    { value: 'et', label: 'Estonian' },
+    { value: 'fi', label: 'Finnish' },
+    { value: 'fr', label: 'French' },
+    { value: 'hu', label: 'Hungarian' },
+    { value: 'id', label: 'Indonesian' },
+    { value: 'it', label: 'Italian' },
+    { value: 'lt', label: 'Lithuanian' },
+    { value: 'lv', label: 'Latvian' },
+    { value: 'nb', label: 'Norwegian (Bokmål)' },
+    { value: 'nl', label: 'Dutch' },
+    { value: 'pl', label: 'Polish' },
+    { value: 'ro', label: 'Romanian' },
+    { value: 'ru', label: 'Russian' },
+    { value: 'sk', label: 'Slovak' },
+    { value: 'sl', label: 'Slovenian' },
+    { value: 'sv', label: 'Swedish' },
+    { value: 'tr', label: 'Turkish' },
+    { value: 'uk', label: 'Ukrainian' },
+    { value: 'zh', label: 'Chinese' }
   ];
 
   // Lists of colors and animals 
@@ -51,16 +71,16 @@ function App() {
   const joinRoom = () => {
 
     if (username !== "") {
-      // Store the subject preferences in cookies when joining the room.
-      if (yourSubject !== "") {
-        setCookie("userSubject", yourSubject, 365); // You can adjust the expiration time as needed.
+      // Store the language preferences in cookies when joining the room.
+      if (yourLanguage !== "") {
+        setCookie("userLanguage", yourLanguage, 365); // You can adjust the expiration time as needed.
       }
-      if (learnSubject !== "") {
-        setCookie("newSubj", learnSubject, 365); // You can adjust the expiration time as needed.
+      if (learnLanguage !== "") {
+        setCookie("newLang", learnLanguage, 365); // You can adjust the expiration time as needed.
       }
 
-      let params = "user_role=" + yourSubject + "&desired_subject=" + learnSubject
-      const request = new Request("http://localhost:30001/classroom?" + params, {
+      let params = "user_language=" + yourLanguage + "&desired_language=" + learnLanguage
+      const request = new Request("http://localhost:30001/chatroom?" + params, {
         method: "get",
         headers: {
           Accept: "application/json, text/plain, */*",
@@ -71,7 +91,7 @@ function App() {
       fetch(request).then(res => {
         return res.json()
       }).then(data => {
-        setPortNumber(data.classroom_port);
+        setPortNumber(data.chatroom_port);
         setWaitRoom(true);
       })     
     }
@@ -81,20 +101,20 @@ function App() {
     <div className="App">
       {(
         waitRoom ? (
-          <WaitRoom username={username} yourSubject={yourSubject} learnSubject={learnSubject} portNumber={portNumber}/>
+          <WaitRoom username={username} yourLanguage={yourLanguage} learnLanguage={learnLanguage} portNumber={portNumber}/>
         ) : (
-          <div className="joinClassContainer">
-            <h3>Join A Class</h3>
+          <div className="joinChatContainer">
+            <h3>Join A Chat</h3>
             <div>
               <select
-                value={yourSubject}
+                value={yourLanguage}
                 onChange={(event) => {
                   setUsername(generatedFirstName + generatedLastName)
-                  setYourSubject(event.target.value);
+                  setYourLanguage(event.target.value);
                 }}
               >
-                <option value="">Select Your Subject</option>
-                {subjectOptions.map((option) => (
+                <option value="">Select Your Language</option>
+                {languageOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -103,13 +123,13 @@ function App() {
             </div>
             <div>
               <select
-                value={learnSubject}
+                value={learnLanguage}
                 onChange={(event) => {
-                  setLearnSubject(event.target.value);
+                  setLearnLanguage(event.target.value);
                 }}
               >
-                <option value="">Select Subject to Learn</option>
-                {subjectOptions.map((option) => (
+                <option value="">Select Language to Learn</option>
+                {languageOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>

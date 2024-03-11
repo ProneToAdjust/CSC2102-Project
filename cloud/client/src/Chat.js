@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-function Class({ socket, username, room, yourSubject, learnSubject }) {
+function Chat({ socket, username, room, yourLanguage, learnLanguage }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const [toTranslateMsg, setToTranslateMsg] = useState(false);
   const [btnStyle, setBtnStyle] = useState({ color: 'lightgray' })
 
   const sendMessage = async () => {
@@ -15,8 +16,9 @@ function Class({ socket, username, room, yourSubject, learnSubject }) {
           new Date(Date.now()).getHours() +
           ":" +
           new Date(Date.now()).getMinutes(),
-        yourSubject,
-        learnSubject
+        toTranslateMsg,
+        yourLanguage,
+        learnLanguage
       };
 
       await socket.emit("send_message", messageData);
@@ -31,13 +33,17 @@ function Class({ socket, username, room, yourSubject, learnSubject }) {
       author: 'System',
       message: message,
       time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
-      yourSubject,
-      learnSubject
+      toTranslateMsg: false, // System messages should not be translated
+      yourLanguage,
+      learnLanguage
     };
     socket.emit("send_message", systemMessage);
     setMessageList((list) => [...list, systemMessage]);
   }
 
+  const translateMessage = () => {
+    setToTranslateMsg(!toTranslateMsg);
+  }
 
   useEffect(() => {
     socket.on("receive_message", (receiveData) => {
@@ -46,17 +52,17 @@ function Class({ socket, username, room, yourSubject, learnSubject }) {
   }, [socket]);
 
   const handleLeaveRoom = () => {
-    sendSystemMessage(`System Generated Message: ${username} has left the classroom.`);
+    sendSystemMessage(`System Generated Message: ${username} has left the chat.`);
     window.location.reload(false);
     socket.emit("removeKeyValuePair", socket.id);
   }
 
   return (
-    <div className="classroom-window">
-      <div className="classroom-header">
-        <p>Classroom</p> {/* Update the text here */}
+    <div className="chat-window">
+      <div className="chat-header">
+        <p>Chat Room</p> {/* Update the text here */}
       </div>
-      <div className="classroom-body">
+      <div className="chat-body">
         {messageList.map((messageContent) => {
           const isSystemMessage = messageContent.author === 'System';
           const messageClassName = isSystemMessage ? 'system-message' : '';
@@ -79,7 +85,7 @@ function Class({ socket, username, room, yourSubject, learnSubject }) {
           );
         })}
       </div>
-      <div className="classroom-footer">
+      <div className="chat-footer">
         <input
           type="text"
           value={currentMessage}
@@ -92,12 +98,13 @@ function Class({ socket, username, room, yourSubject, learnSubject }) {
           }}
         />
         <button onClick={sendMessage}>&#9658;</button>
+        <button style={toTranslateMsg ? { color: '#43a047' } : {color: 'lightgray'}} onClick={translateMessage}>Translate?</button>
       </div>
-      <div className="classroom-backbtn" style={{ padding: "10px", paddingLeft: "360px" }}>
+      <div className="chat-backbtn" style={{ padding: "10px", paddingLeft: "360px" }}>
         <button onClick={handleLeaveRoom} style={{ color: "black", backgroundColor: "lightblue", border: "white", padding: "8px", fontWeight: "bold" }}>Leave Room</button>
       </div>
     </div>
   );
 }
 
-export default Class;
+export default Chat;
