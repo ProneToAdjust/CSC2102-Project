@@ -4,6 +4,7 @@ import random
 class ServerPodTest(HttpUser):
     @task
     def classroom(self):
-        subjList = ["English","Chemistry","Mathematics","Chinese","Malay","Tamil","Biology","Physics" ]
+        user_roles = ["student","tutor"]
+        subjects = ["English","Chemistry","Mathematics","Chinese","Malay","Tamil","Biology","Physics" ]
 
-        self.client.get("/classroom?user_role=" + random.choice(subjList) + "&desired_subject=" + random.choice(subjList))
+        self.client.get("/classroom?user_role=" + random.choice(user_roles) + "&desired_subject=" + random.choice(subjects))
