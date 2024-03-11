@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function Class({ socket, username, room, yourSubject, learnSubject }) {
+function Class({ socket, username, room, userRole, learnSubject }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
   const [btnStyle, setBtnStyle] = useState({ color: 'lightgray' })
@@ -15,7 +15,7 @@ function Class({ socket, username, room, yourSubject, learnSubject }) {
           new Date(Date.now()).getHours() +
           ":" +
           new Date(Date.now()).getMinutes(),
-        yourSubject,
+        userRole,
         learnSubject
       };
 
@@ -31,7 +31,7 @@ function Class({ socket, username, room, yourSubject, learnSubject }) {
       author: 'System',
       message: message,
       time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
-      yourSubject,
+      userRole,
       learnSubject
     };
     socket.emit("send_message", systemMessage);

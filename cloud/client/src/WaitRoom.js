@@ -3,12 +3,12 @@ import Class from "./Class";
 import App from "./App";
 import io from "socket.io-client";
 
-function WaitRoom({ username, yourSubject, learnSubject, portNumber }) {
+function WaitRoom({ username, userRole, learnSubject, portNumber }) {
   const [socket, setSocket] = useState(null);
   const [showClass, setShowClass] = useState(false);
   const [landingPage, setLandingPage] = useState(false);
   const [dictionary, setDictionary] = useState({});
-  const combinedSubj = yourSubject + learnSubject;
+  const combinedSubj = userRole + learnSubject;
   const roomCount = Object.keys(dictionary).length;
 
   useEffect(() => {
@@ -59,15 +59,18 @@ function WaitRoom({ username, yourSubject, learnSubject, portNumber }) {
 
   const handleJoinRoom = () => {
     if (roomCount > 0 && roomCount % 2 === 0) {
+
+      // Emit "join_room" event for all clients
       socket.emit("join_room", portNumber);
       setShowClass(true);
     }
   }
+  
 
   return (
     <div className="App">
       {showClass ? (
-        <Class socket={socket} username={username} room={portNumber} dictionary={dictionary} yourSubject={yourSubject} learnSubject={learnSubject} />
+        <Class socket={socket} username={username} room={portNumber} dictionary={dictionary} userRole={userRole} learnSubject={learnSubject} />
       ) : (!landingPage ? (
         (
           <div className="wait-display">

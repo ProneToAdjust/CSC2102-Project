@@ -5,7 +5,7 @@ import WaitRoom from "./WaitRoom";
 
 function App() {
   const [username, setUsername] = useState("");
-  const [yourSubject, setYourSubject] = useState(getCookie("userSubject") || ""); // Initialize with the value from the cookie, if available.
+  const [userRole, setYourSubject] = useState(getCookie("userRole") || ""); // Initialize with the value from the cookie, if available.
   const [learnSubject, setLearnSubject] = useState(getCookie("newSubj") || ""); // Initialize with the value from the cookie, if available.
   const [waitRoom, setWaitRoom] = useState(false);
   const [generatedFirstName, setGeneratedFirstName] = useState('');
@@ -23,6 +23,11 @@ function App() {
     { value: 'tm', label: 'Tamil' },
     { value: 'bi', label: 'Biology' },
     { value: 'ph', label: 'Physics' },
+  ];
+
+  const userOptions = [
+    {value:"student", label:"Student"},
+    {value:"teacher", label:"Teacher"},
   ];
 
   // Lists of colors and animals 
@@ -52,14 +57,14 @@ function App() {
 
     if (username !== "") {
       // Store the subject preferences in cookies when joining the room.
-      if (yourSubject !== "") {
-        setCookie("userSubject", yourSubject, 365); // You can adjust the expiration time as needed.
+      if (userRole !== "") {
+        setCookie("userRole", userRole, 365); // You can adjust the expiration time as needed.
       }
       if (learnSubject !== "") {
         setCookie("newSubj", learnSubject, 365); // You can adjust the expiration time as needed.
       }
 
-      let params = "user_role=" + yourSubject + "&desired_subject=" + learnSubject
+      let params = "user_role=" + userRole + "&desired_subject=" + learnSubject
       const request = new Request("http://localhost:30001/classroom?" + params, {
         method: "get",
         headers: {
@@ -81,20 +86,20 @@ function App() {
     <div className="App">
       {(
         waitRoom ? (
-          <WaitRoom username={username} yourSubject={yourSubject} learnSubject={learnSubject} portNumber={portNumber}/>
+          <WaitRoom username={username} userRole={userRole} learnSubject={learnSubject} portNumber={portNumber}/>
         ) : (
           <div className="joinClassContainer">
             <h3>Join A Class</h3>
             <div>
               <select
-                value={yourSubject}
+                value={userRole}
                 onChange={(event) => {
                   setUsername(generatedFirstName + generatedLastName)
                   setYourSubject(event.target.value);
                 }}
               >
-                <option value="">Select Your Subject</option>
-                {subjectOptions.map((option) => (
+                <option value="">Select Your Role</option>
+                {userOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -108,7 +113,7 @@ function App() {
                   setLearnSubject(event.target.value);
                 }}
               >
-                <option value="">Select Subject to Learn</option>
+                <option value="">Select Subject</option>
                 {subjectOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
