@@ -59,7 +59,7 @@ function App() {
         setCookie("newSubj", learnSubject, 365); // You can adjust the expiration time as needed.
       }
 
-      let params = "user_subject=" + yourSubject + "&desired_subject=" + learnSubject
+      let params = "user_role=" + yourSubject + "&desired_subject=" + learnSubject
       const request = new Request("http://localhost:30001/classroom?" + params, {
         method: "get",
         headers: {
