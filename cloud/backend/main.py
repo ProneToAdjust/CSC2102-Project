@@ -17,41 +17,6 @@ app.config['CORS_HEADER'] = 'Content-Type'
 waiting_list = {}
 waiting_list = defaultdict(lambda: queue.Queue(), waiting_list)
 
-@app.route('/chatroom')
-@cross_origin()
-def chatroom():
-    # get user_language, desired_language from request
-    # example request: http://localhost:4000/chatroom?user_language=english&desired_language=spanish
-    user_language = request.args.get('user_language')
-    desired_language = request.args.get('desired_language')
-
-    # make key for waiting_list dictionary, e.g. 'english to spanish'
-    waiting_list_key = user_language + ' to ' + desired_language
-    # get chatroom queue from waiting list
-    chatroom_queue = waiting_list[waiting_list_key]
-
-       # if there is no waiting chatroom in the queue,
-    # create one and add chatroom id to waiting list for the other language
-    # else, pop chatroom id from waiting list
-    if chatroom_queue.qsize() == 0:
-        chatroom_id = containerManager.createContainer()
-        # create waiting list key for other language, e.g. 'spanish to english'
-        waiting_list_key = desired_language + ' to ' + user_language
-        waiting_list[waiting_list_key].put(chatroom_id)
-
-    else:
-        chatroom_id = chatroom_queue.get()
-
-    # get chatroom port from container manager
-    chatroom_port = containerManager.getContainerPort(chatroom_id)
-
-    # create response json
-    response = {
-        'chatroom_port': chatroom_port
-    }
-
-    return make_response(response, 200)
-
 @app.route('/classroom')
 @cross_origin()
 def classroom():
