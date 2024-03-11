@@ -45,11 +45,11 @@ def classroom():
         classroom_id = classroom_queue.get()
 
     # get classroom port from container manager
-    claassroom_port = containerManager.getContainerPort(classroom_id)
+    classroom_port = containerManager.getContainerPort(classroom_id)
 
     # create response json
     response = {
-        'claassroom_port': claassroom_port
+        'classroom_port': classroom_port
     }
 
     return make_response(response, 200)
