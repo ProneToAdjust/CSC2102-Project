@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function Chat({ socket, username, room, yourSubject, learnSubject }) {
+function Class({ socket, username, room, yourSubject, learnSubject }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
   const [btnStyle, setBtnStyle] = useState({ color: 'lightgray' })
@@ -46,17 +46,17 @@ function Chat({ socket, username, room, yourSubject, learnSubject }) {
   }, [socket]);
 
   const handleLeaveRoom = () => {
-    sendSystemMessage(`System Generated Message: ${username} has left the chat.`);
+    sendSystemMessage(`System Generated Message: ${username} has left the classroom.`);
     window.location.reload(false);
     socket.emit("removeKeyValuePair", socket.id);
   }
 
   return (
-    <div className="chat-window">
-      <div className="chat-header">
-        <p>Chat Room</p> {/* Update the text here */}
+    <div className="classroom-window">
+      <div className="classroom-header">
+        <p>Classroom</p> {/* Update the text here */}
       </div>
-      <div className="chat-body">
+      <div className="classroom-body">
         {messageList.map((messageContent) => {
           const isSystemMessage = messageContent.author === 'System';
           const messageClassName = isSystemMessage ? 'system-message' : '';
@@ -79,7 +79,7 @@ function Chat({ socket, username, room, yourSubject, learnSubject }) {
           );
         })}
       </div>
-      <div className="chat-footer">
+      <div className="classroom-footer">
         <input
           type="text"
           value={currentMessage}
@@ -93,11 +93,11 @@ function Chat({ socket, username, room, yourSubject, learnSubject }) {
         />
         <button onClick={sendMessage}>&#9658;</button>
       </div>
-      <div className="chat-backbtn" style={{ padding: "10px", paddingLeft: "360px" }}>
+      <div className="classroom-backbtn" style={{ padding: "10px", paddingLeft: "360px" }}>
         <button onClick={handleLeaveRoom} style={{ color: "black", backgroundColor: "lightblue", border: "white", padding: "8px", fontWeight: "bold" }}>Leave Room</button>
       </div>
     </div>
   );
 }
 
-export default Chat;
+export default Classroom;

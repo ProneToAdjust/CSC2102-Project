@@ -4,6 +4,6 @@ import random
 class ServerPodTest(HttpUser):
     @task
     def chatroom(self):
-        langList = ["English", "Español" , "Korean", "Japanese", 'Bulgarian', 'Czech', 'Danish', 'German','Greek','Estonian', 'Finnish', 'French', 'Hungarian', 'Indonesian', 'Italian', 'Lithuanian', 'Latvian', 'Norwegian (Bokmål)', 'Dutch', 'Polish', 'Romanian', 'Russian', 'Slovak', 'Slovenian', 'Swedish', 'Turkish', 'Ukrainian', 'Chinese' ]
+        subjList = ["English","Chemistry","Mathematics","Chinese","Malay","Tamil","Biology","Physics" ]
 
-        self.client.get("/chatroom?user_language=" + random.choice(langList) + "&desired_language=" + random.choice(langList))
+        self.client.get("/chatroom?user_subject=" + random.choice(subjList) + "&desired_subject=" + random.choice(subjList))

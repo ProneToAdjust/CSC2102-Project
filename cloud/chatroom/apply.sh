@@ -1,1 +1,1 @@
-docker build -t chatroom .
+docker build -t classroom .

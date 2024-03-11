@@ -51,7 +51,7 @@ function App() {
   const joinRoom = () => {
 
     if (username !== "") {
-      // Store the language preferences in cookies when joining the room.
+      // Store the subject preferences in cookies when joining the room.
       if (yourSubject !== "") {
         setCookie("userSubject", yourSubject, 365); // You can adjust the expiration time as needed.
       }
@@ -60,7 +60,7 @@ function App() {
       }
 
       let params = "user_subject=" + yourSubject + "&desired_subject=" + learnSubject
-      const request = new Request("http://localhost:30001/chatroom?" + params, {
+      const request = new Request("http://localhost:30001/classroom?" + params, {
         method: "get",
         headers: {
           Accept: "application/json, text/plain, */*",
@@ -71,7 +71,7 @@ function App() {
       fetch(request).then(res => {
         return res.json()
       }).then(data => {
-        setPortNumber(data.chatroom_port);
+        setPortNumber(data.classroom_port);
         setWaitRoom(true);
       })     
     }
@@ -83,8 +83,8 @@ function App() {
         waitRoom ? (
           <WaitRoom username={username} yourSubject={yourSubject} learnSubject={learnSubject} portNumber={portNumber}/>
         ) : (
-          <div className="joinChatContainer">
-            <h3>Join A Chat</h3>
+          <div className="joinClassContainer">
+            <h3>Join A Class</h3>
             <div>
               <select
                 value={yourSubject}
