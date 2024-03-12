@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 function Class({ socket, username, room, userRole, learnSubject }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const [toTranslateMsg, setToTranslateMsg] = useState(false);
   const [btnStyle, setBtnStyle] = useState({ color: 'lightgray' })
 
   const sendMessage = async () => {
@@ -15,6 +16,7 @@ function Class({ socket, username, room, userRole, learnSubject }) {
           new Date(Date.now()).getHours() +
           ":" +
           new Date(Date.now()).getMinutes(),
+        toTranslateMsg,
         userRole,
         learnSubject
       };
@@ -31,13 +33,16 @@ function Class({ socket, username, room, userRole, learnSubject }) {
       author: 'System',
       message: message,
       time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+      toTranslateMsg: false, // System messages should not be translated
       userRole,
       learnSubject
     };
     socket.emit("send_message", systemMessage);
     setMessageList((list) => [...list, systemMessage]);
   }
-
+  const translateMessage = () => {
+    setToTranslateMsg(!toTranslateMsg);
+  }
 
   useEffect(() => {
     socket.on("receive_message", (receiveData) => {
@@ -92,6 +97,7 @@ function Class({ socket, username, room, userRole, learnSubject }) {
           }}
         />
         <button onClick={sendMessage}>&#9658;</button>
+        {/* <button style={toTranslateMsg ? { color: '#43a047' } : {color: 'lightgray'}} onClick={translateMessage}>Translate?</button> */}
       </div>
       <div className="classroom-backbtn" style={{ padding: "10px", paddingLeft: "360px" }}>
         <button onClick={handleLeaveRoom} style={{ color: "black", backgroundColor: "lightblue", border: "white", padding: "8px", fontWeight: "bold" }}>Leave Room</button>

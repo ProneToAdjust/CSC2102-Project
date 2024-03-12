@@ -19,10 +19,12 @@ function WaitRoom({ username, userRole, learnSubject, portNumber }) {
 
       newSocket.on("connect", () => {
         newSocket.emit("addKeyValuePair", { username, subject: combinedSubj });
+        console.log("combined subj+",combinedSubj);
       });
 
       newSocket.on("updateDictionary", (updatedDictionary) => {
         setDictionary(updatedDictionary);
+        console.log("updated dictionary", updatedDictionary);
       });
 
       newSocket.emit("addAndCheckPort", portNumber, (res) => {

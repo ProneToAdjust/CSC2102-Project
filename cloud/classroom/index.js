@@ -34,9 +34,9 @@ io.on("connection", (socket) => {
     // Check if user wants to translate their message
     if (data.toTranslateMsg) {
       const message = data.message;
-      const yourSubject = data.yourSubject;
+      const userRole = data.userRole;
       const learnSubject = data.learnSubject === "en" ? "en-US" : data.learnSubject; // Using US English in this case
-      translator.translateText(message, yourSubject, learnSubject)
+      translator.translateText(message, userRole, learnSubject)
       .then(results => {
         // console.log(results);
         receiveData = {
@@ -105,10 +105,10 @@ io.on("connection", (socket) => {
   // socket.on("translate_message", (data) => {
   //   const messageData = data.messageData;
   //   const message = messageData.message;
-  //   const yourSubject = data.yourSubject;
+  //   const userRole = data.userRole;
   //   const learnSubject = data.learnSubject === "en" ? "en-US" : data.learnSubject;
 
-  //   translator.translateText(message, yourSubject, learnSubject)
+  //   translator.translateText(message, userRole, learnSubject)
   //   .then((results) => {
   //     console.log(results)
   //     const receiveMsg = {

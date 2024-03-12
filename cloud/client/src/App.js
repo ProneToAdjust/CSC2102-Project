@@ -5,7 +5,7 @@ import WaitRoom from "./WaitRoom";
 
 function App() {
   const [username, setUsername] = useState("");
-  const [userRole, setYourSubject] = useState(getCookie("userRole") || ""); // Initialize with the value from the cookie, if available.
+  const [userRole, setUserRole] = useState(getCookie("yourRole") || ""); // Initialize with the value from the cookie, if available.
   const [learnSubject, setLearnSubject] = useState(getCookie("newSubj") || ""); // Initialize with the value from the cookie, if available.
   const [waitRoom, setWaitRoom] = useState(false);
   const [generatedFirstName, setGeneratedFirstName] = useState('');
@@ -27,7 +27,7 @@ function App() {
 
   const userOptions = [
     {value:"student", label:"Student"},
-    {value:"teacher", label:"Teacher"},
+    {value:"tutor", label:"Tutor"},
   ];
 
   // Lists of colors and animals 
@@ -58,13 +58,14 @@ function App() {
     if (username !== "") {
       // Store the subject preferences in cookies when joining the room.
       if (userRole !== "") {
-        setCookie("userRole", userRole, 365); // You can adjust the expiration time as needed.
+        setCookie("yourRole", userRole, 365); // You can adjust the expiration time as needed.
       }
       if (learnSubject !== "") {
         setCookie("newSubj", learnSubject, 365); // You can adjust the expiration time as needed.
       }
 
       let params = "user_role=" + userRole + "&desired_subject=" + learnSubject
+      console.log(params)
       const request = new Request("http://localhost:30001/classroom?" + params, {
         method: "get",
         headers: {
@@ -95,7 +96,7 @@ function App() {
                 value={userRole}
                 onChange={(event) => {
                   setUsername(generatedFirstName + generatedLastName)
-                  setYourSubject(event.target.value);
+                  setUserRole(event.target.value);
                 }}
               >
                 <option value="">Select Your Role</option>
