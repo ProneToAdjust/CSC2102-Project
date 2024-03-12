@@ -57,11 +57,11 @@ function Class({ socket, username, room, userRole, learnSubject }) {
   }
 
   return (
-    <div className="classroom-window">
-      <div className="classroom-header">
+    <div className="class-window">
+      <div className="class-header">
         <p>Classroom</p> {/* Update the text here */}
       </div>
-      <div className="classroom-body">
+      <div className="class-body">
         {messageList.map((messageContent) => {
           const isSystemMessage = messageContent.author === 'System';
           const messageClassName = isSystemMessage ? 'system-message' : '';
@@ -84,7 +84,7 @@ function Class({ socket, username, room, userRole, learnSubject }) {
           );
         })}
       </div>
-      <div className="classroom-footer">
+      <div className="class-footer">
         <input
           type="text"
           value={currentMessage}
@@ -99,7 +99,7 @@ function Class({ socket, username, room, userRole, learnSubject }) {
         <button onClick={sendMessage}>&#9658;</button>
         {/* <button style={toTranslateMsg ? { color: '#43a047' } : {color: 'lightgray'}} onClick={translateMessage}>Translate?</button> */}
       </div>
-      <div className="classroom-backbtn" style={{ padding: "10px", paddingLeft: "360px" }}>
+      <div className="class-backbtn" style={{ padding: "10px", paddingLeft: "360px" }}>
         <button onClick={handleLeaveRoom} style={{ color: "black", backgroundColor: "lightblue", border: "white", padding: "8px", fontWeight: "bold" }}>Leave Room</button>
       </div>
     </div>
