@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 function Class({ socket, username, room, userRole, learnSubject }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [prevPosition, setPrevPosition] = useState({ x: 0, y: 0 });
+  const [drawingData, setDrawingData] = useState([]);
+  const [whiteboardVisible, setWhiteboardVisible] = useState(false); // State for whiteboard visibility
+
+  const chatBodyRef = useRef(null); // Reference to the chat body element
 
   const sendMessage = async () => {
     if (currentMessage !== "") {
@@ -48,19 +54,86 @@ function Class({ socket, username, room, userRole, learnSubject }) {
     window.location.reload(false);
     socket.emit("removeKeyValuePair", socket.id);
   }
+  
+  const startDrawing = (event) => {
+    setIsDrawing(true);
+    setPrevPosition({
+      x: event.clientX - event.target.offsetLeft,
+      y: event.clientY - event.target.offsetTop,
+    });
+  };
+
+  const draw = (event) => {
+    if (isDrawing) {
+      const canvas = event.target;
+      const currentPosition = {
+        x: event.clientX - canvas.offsetLeft,
+        y: event.clientY - canvas.offsetTop,
+      };
+
+      const newData = {
+        room: room,
+        prevPosition,
+        currentPosition,
+      };
+
+      setDrawingData((prevData) => [...prevData, newData]);
+      setPrevPosition(currentPosition);
+
+      socket.emit("draw", newData);
+    }
+  };
+
+  const endDrawing = () => {
+    setIsDrawing(false);
+  };
+
+  useEffect(() => {
+    socket.on("draw", (data) => {
+      setDrawingData((prevData) => [...prevData, data]);
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    const canvas = document.getElementById("whiteboard-canvas");
+    const context = canvas.getContext("2d");
+
+    context.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+    drawingData.forEach(({ prevPosition, currentPosition }) => {
+      context.beginPath();
+      context.moveTo(prevPosition.x, prevPosition.y);
+      context.lineTo(currentPosition.x, currentPosition.y);
+      context.strokeStyle = "#000"; // color of the line
+      context.lineWidth = 2; // width of the line
+      context.stroke();
+    });
+  }, [drawingData]);
+
+  const toggleWhiteboardVisibility = () => {
+    setWhiteboardVisible((prevVisibility) => !prevVisibility);
+  };
+
+  const clearWhiteboard = () => {
+    setDrawingData([]);
+    const canvas = document.getElementById("whiteboard-canvas");
+    const context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+  };
+
 
   return (
     <div className="class-window">
       <div className="class-header">
         <p>Classroom</p> {/* Update the text here */}
       </div>
-      <div className="class-body">
-        {messageList.map((messageContent) => {
+      <div className="class-body" ref={chatBodyRef}>
+        {messageList.map((messageContent, index) => {
           const isSystemMessage = messageContent.author === 'System';
           const messageClassName = isSystemMessage ? 'system-message' : '';
-
+  
           return (
             <div
+              key={index}
               className={`message ${messageClassName}`}
               id={username === messageContent.author ? 'you' : 'other'}
             >
@@ -91,11 +164,27 @@ function Class({ socket, username, room, userRole, learnSubject }) {
         />
         <button onClick={sendMessage}>&#9658;</button>
       </div>
+      <div className="whiteboard" style={{ display: whiteboardVisible ? "block" : "none" }}>
+        <canvas
+          id="whiteboard-canvas"
+          onMouseDown={startDrawing}
+          onMouseMove={draw}
+          onMouseUp={endDrawing}
+          onMouseOut={endDrawing}
+          width={800} // Set initial width
+          style={{ border: "1px solid #000" }}
+        ></canvas>
+      </div>
+      <div className="whiteboard-options">
+        <button onClick={toggleWhiteboardVisibility} className="whiteboard-btn"style={{ color: "black", backgroundColor: "lightblue", border: "white", padding: "8px", fontWeight: "bold" }}>{whiteboardVisible ? "Hide Whiteboard" : "Show Whiteboard"}</button>
+        <button onClick={clearWhiteboard} className="whiteboard-btn"style={{ color: "black", backgroundColor: "lightblue", border: "white", padding: "8px", fontWeight: "bold" }}>Clear Whiteboard</button>
+      </div>
       <div className="class-backbtn" style={{ padding: "10px", paddingLeft: "360px" }}>
         <button onClick={handleLeaveRoom} style={{ color: "black", backgroundColor: "lightblue", border: "white", padding: "8px", fontWeight: "bold" }}>Leave Room</button>
       </div>
     </div>
   );
+  
 }
 
 export default Class;
