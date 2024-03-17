@@ -136,6 +136,12 @@ function Class({ socket, username, room, userRole, learnSubject }) {
       context.clearRect(0, 0, canvas.width, canvas.height);
     });
   }, [socket]);
+  useEffect(() => {
+    // Scroll to the bottom of the chat body
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+    }
+  }, [messageList]);
   
 
   return (
