@@ -114,12 +114,29 @@ function Class({ socket, username, room, userRole, learnSubject }) {
   };
 
   const clearWhiteboard = () => {
+    // Clear drawing data on the client side
     setDrawingData([]);
+  
+    // Clear the canvas on the client side
     const canvas = document.getElementById("whiteboard-canvas");
     const context = canvas.getContext("2d");
-    context.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  
+    // Emit an event to the server to inform other clients to clear their whiteboards
+    socket.emit("clear_whiteboard", { room });
   };
-
+  useEffect(() => {
+    socket.on("clear_whiteboard", () => {
+      // Clear drawing data on all clients
+      setDrawingData([]);
+  
+      // Clear the canvas on all clients
+      const canvas = document.getElementById("whiteboard-canvas");
+      const context = canvas.getContext("2d");
+      context.clearRect(0, 0, canvas.width, canvas.height);
+    });
+  }, [socket]);
+  
 
   return (
     <div className="class-window">

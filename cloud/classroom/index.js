@@ -73,7 +73,10 @@ io.on("connection", (socket) => {
     // Emit the updated dictionary to all connected clients
     io.emit("updateDictionary", dictionary);
   });
-
+  socket.on("clear_whiteboard", ({ room }) => {
+    io.to(room).emit("clear_whiteboard");
+  });
+  
   socket.on("removeKeyValuePair", (username) => {    
     delete dictionary[username];
 
