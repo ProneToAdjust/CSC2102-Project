@@ -53,6 +53,10 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("draw", (data) => {
+    socket.to(data.room).emit("draw", data);
+  });
+
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);
   });
@@ -102,27 +106,6 @@ io.on("connection", (socket) => {
 
   })
 
-  // socket.on("translate_message", (data) => {
-  //   const messageData = data.messageData;
-  //   const message = messageData.message;
-  //   const userRole = data.userRole;
-  //   const learnSubject = data.learnSubject === "en" ? "en-US" : data.learnSubject;
-
-  //   translator.translateText(message, userRole, learnSubject)
-  //   .then((results) => {
-  //     console.log(results)
-  //     const receiveMsg = {
-  //       room: messageData.room,
-  //       author: messageData.author,
-  //       message: results.text,
-  //       time: messageData.time
-  //     }
-  //     socket.to(messageData.room).emit("receive_message", receiveMsg);
-  //   })
-  //   .catch((error) => {
-  //     console.error(error)
-  //   })
-  // })
 });
 
 //Find duplicates in array
