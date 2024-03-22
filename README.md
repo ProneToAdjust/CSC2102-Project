@@ -7,17 +7,17 @@
 ### Windows Configuration
 To build the docker image, run the following command in the root directory of the project:
 ```
-cd cloud\classroom
+cd psd2\classroom
 apply.bat
 ```
 To build the kubernetes server, run the following command in the root directory of the project:
 ```
-cd cloud\backend
+cd psd2\backend
 apply.bat
 ```
 To build the kubernetes client, run the following command in the root directory of the project:
 ```
-cd cloud\client
+cd psd2\client
 apply.bat
 
 ```
@@ -25,17 +25,17 @@ apply.bat
 ### Mac Configuration
 To build the docker image, run the following command in the root directory of the project:
 ```
-cd cloud/classroom
+cd psd2/classroom
 bash apply.sh
 ```
 To build the kubernetes server, run the following command in the root directory of the project:
 ```
-cd cloud/backend
+cd psd2/backend
 bash apply.sh
 ```
 To build the kubernetes client, run the following command in the root directory of the project:
 ```
-cd cloud\client
+cd psd2\client
 bash apply.sh
 ```
 
@@ -52,7 +52,7 @@ With the kubernetes server and client running, you can access the landing page b
 
 Select your role and subject from the dropdowns and click `Join A Room`
 
-![Languages selected](readme_images/languages_selected.png)
+![Role and Subject selected](readme_images/role_and_subject_selected.png)
 
 You will be redirected to a waiting page where you will wait for another user to join the room.
 
@@ -64,23 +64,32 @@ For the purposes of this demo, you will need to open another browser window and 
 
 Once the second user joins the room, you will be redirected to the classroom page.
 
-![Chatroom](readme_images/chatroom.png)
+![Classroom](readme_images/classroom.png)
 
 If you view the running containers in Docker Desktop, you will see the a container for the classroom would have been created.
 
-![Alt text](readme_images/chatroom_container.png)
+![Alt text](readme_images/classroom_container.png)
+
+#### Whiteboard
+
+The whiteboard is a shared space where users can draw and write on the board. The whiteboard is accessible by clicking the `Show Whiteboard` button on the classroom page.
+
+![Whiteboard disabled](readme_images/whiteboard_disabled.png)
+![Whiteboard tutor](readme_images/whiteboard_tutor.png)
+![Whiteboard student](readme_images/whiteboard_student.png)
+
 
 #### Classroom scaling
 
 If you repeat the steps above to make another Classroom, you will notice a new container with a different port is created for the new classroom.
 
-![Alt text](readme_images/new_chatroom_container.png)
+![Alt text](readme_images/new_classroom_container.png)
 
 #### Stress testing HPA
 To stress test the HPA functionality of the client pod, run the following commands:
 ```
 pip install locust
-cd cloud/client
+cd psd2/client
 locust
 ```
 Then go to `localhost:8089` and enter the following values:
@@ -98,7 +107,7 @@ kubectl get hpa
 To stress test the classroom creation functionality of the backend pod, run the following commands:
 ```
 pip install locust
-cd cloud/backend
+cd psd2/backend
 locust
 ```
 Then go to `localhost:8089` and enter the following values:
